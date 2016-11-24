@@ -25,7 +25,9 @@ SECRET_KEY = 'zfl#cqk^ktsz%^*y3ekq0r3vx4&&p1!!i$j%i!=pscy79lqtf#'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    'popcorn-backend-dev.ap-northeast-2.elasticbeanstalk.com',
+]
 
 
 # Application definition
