@@ -21,20 +21,26 @@ ROOT_DIR = os.path.dirname(BASE_DIR)
 CONF_DIR = os.path.join(ROOT_DIR, '.django-conf')
 STATIC_ROOT = os.path.join(ROOT_DIR, 'static_root')
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/1.10/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'zfl#cqk^ktsz%^*y3ekq0r3vx4&&p1!!i$j%i!=pscy79lqtf#'
-
-# SECURITY WARNING: don't run with debug turned on in production!
-
+# DEBUG
 DEBUG = (len(sys.argv) > 1 and sys.argv[1] == 'runserver')
 
 if DEBUG:
     config = json.loads(open(os.path.join(CONF_DIR, 'settings_debug.json')).read())
 else:
     config = json.loads(open(os.path.join(CONF_DIR, 'settings_deploy.json')).read())
+
+
+# Auth
+AUTH_USER_MODEL = 'member.MyUser'
+
+
+# Quick-start development settings - unsuitable for production
+# See https://docs.djangoproject.com/en/1.10/howto/deployment/checklist/
+
+# SECURITY WARNING: keep the secret key used in production secret!
+SECRET_KEY = 'zfl#cqk^ktsz%^*y3ekq0r3vx4&&p1!!i$j%i!=pscy79lqtf#'
+
 
 ALLOWED_HOSTS = [
     'popcorn-backend-dev.ap-northeast-2.elasticbeanstalk.com',
@@ -49,6 +55,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    'member',
+    'movie',
 ]
 
 MIDDLEWARE = [
