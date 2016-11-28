@@ -23,7 +23,9 @@ STATIC_ROOT = os.path.join(ROOT_DIR, 'static_root')
 
 
 # DEBUG
-DEBUG = (len(sys.argv) > 1 and sys.argv[1] == 'runserver')
+DEBUG = (len(sys.argv) > 1 and sys.argv[1] == 'runserver' or 'makemigrations' or 'migrate')
+print(sys.argv)
+print('DEBUG : %s' % DEBUG)
 
 if DEBUG:
     config = json.loads(open(os.path.join(CONF_DIR, 'settings_debug.json')).read())

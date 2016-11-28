@@ -12,12 +12,18 @@ config = json.loads(open(os.path.join(CONF_DIR, 'settings_deploy.json')).read())
 
 class Command(BaseCommand):
     def handle(self, *args, **options):
-        email = config['defaultSuperuser']['email']
+        username = config['defaultSuperuser']['username']
         password = config['defaultSuperuser']['password']
-        if not User.objects.filter(email=email).exists():
+        gender = config['defaultSuperuser']['gender']
+        date_of_birth = config['defaultSuperuser']['date_of_birth']
+        phone_number = config['defaultSuperuser']['phone_number']
+        if not User.objects.filter(username=username).exists():
             User.objects.create_superuser(
-                email=email,
+                username=username,
                 password=password,
+                gender=gender,
+                date_of_birth=date_of_birth,
+                phone_number=phone_number,
             )
         else:
             print('default superuser exist')
