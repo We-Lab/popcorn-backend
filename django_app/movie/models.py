@@ -47,6 +47,7 @@ class Movie(models.Model):
     actors = models.ManyToManyField(Actor, through='MovieActor')
     director = models.ManyToManyField(Director)
     # 기타정보
+    making_country = models.ForeignKey(MakingCountry)
     rating_kor = models.ForeignKey(ViewRating)
     created_year = models.IntegerField()
     img_url = models.TextField()
