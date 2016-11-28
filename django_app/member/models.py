@@ -26,20 +26,14 @@ class MyUserManager(BaseUserManager):
     def create_superuser(
             self,
             email,
-            last_name,
-            first_name,
-            phone_number,
             password=None,
             ):
         user = self.model(
             email=email,
-            last_name=last_name,
-            first_name=first_name,
-            phone_number=phone_number,
         )
         user.is_staff = True
         user.is_superuser = True
-        user.set_passsword(password)
+        user.set_password(password)
         return user
 
 
