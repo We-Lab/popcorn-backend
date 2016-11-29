@@ -23,6 +23,7 @@ STATIC_ROOT = os.path.join(ROOT_DIR, 'static_root')
 
 
 # DEBUG
+STATIC_S3 = True
 DEBUG = (len(sys.argv) > 1 and sys.argv[1] == 'runserver' or 'makemigrations' or 'migrate' or 'createsuperuser')
 print(sys.argv)
 print('DEBUG : %s' % DEBUG)
@@ -64,7 +65,7 @@ SECRET_KEY = 'zfl#cqk^ktsz%^*y3ekq0r3vx4&&p1!!i$j%i!=pscy79lqtf#'
 ALLOWED_HOSTS = [
     'localhost',
     '127.0.0.1',
-    'popcorn-backend-dev.ap-northeast-2.elasticbeanstalk.com',
+    'popcorn-backend2-dev.ap-northeast-2.elasticbeanstalk.com',
 ]
 
 
@@ -85,6 +86,7 @@ INSTALLED_APPS = [
     'allauth',
     'allauth.account',
     'rest_auth.registration',
+    'storages',
 
     'member',
     'movie',
@@ -162,4 +164,24 @@ USE_TZ = True
 
 
 # Static files (CSS, JavaScript, Images)
-STATIC_URL = '/static/'
+if not DEBUG or STATIC_S3:
+    AWS_HEADERS = {
+        'Expires': 'Thu, 31 Dec 2199 20:00:00 GMT',
+        'Cache-Control': 'max-age=94608000',
+    }
+    AWS_STORAGE_BUCKET_NAME = config['aws']['AWS_STORAGE_BUCKET_NAME']
+    AWS_ACCESS_KEY_ID = config['aws']['AWS_ACCESS_KEY_ID']
+    AWS_SECRET_ACCESS_KEY = config['aws']['AWS_SECRET_ACCESS_KEY']
+    AWS_S3_CUSTOM_DOMAIN = '%s.s3.amazonaws.com' % AWS_STORAGE_BUCKET_NAME
+
+    STATICFILES_LOCATION = 'static'
+    STATIC_URL = "https://%s/%s/" % (AWS_S3_CUSTOM_DOMAIN, STATICFILES_LOCATION)
+    STATICFILES_STORAGE = 'mysite.custom_storages.StaticStorage'
+
+    MEDIAFILES_LOCATION = 'media'
+    MEDIA_URL = "https://%s/%s/" % (AWS_S3_CUSTOM_DOMAIN, MEDIAFILES_LOCATION)
+    DEFAULT_FILE_STORAGE = 'mysite.custom_storages.MediaStorage'
+else:
+    MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+    STATIC_URL = '/static/'
+    MEDIA_URL = '/media/'
