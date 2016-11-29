@@ -17,7 +17,7 @@ GENDER_CHOICES = (
 
 class MyUser(AbstractUser):
     # 필수 기입정보
-    username = models.CharField(max_length=9, unique=True, validators=[RegexValidator(regex='^([a-zA-Z0-9]){5,10}$')])
+    username = models.CharField(max_length=9, unique=True, validators=[RegexValidator(regex='^([a-zA-Z0-9]){4,10}$')])
     email = models.EmailField(max_length=100)
     gender = models.CharField(max_length=30, choices=GENDER_CHOICES)
     date_of_birth = models.DateField()

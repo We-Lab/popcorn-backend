@@ -1,0 +1,58 @@
+from allauth.account.adapter import get_adapter
+from allauth.account.utils import setup_user_email
+from rest_framework import serializers
+from rest_auth.registration.serializers import RegisterSerializer
+
+from member.models import MyUser
+
+
+class RegistrationSerializer(RegisterSerializer):
+    gender = serializers.CharField(required=True)
+    date_of_birth = serializers.DateField(required=True)
+    phone_number = serializers.CharField(required=True)
+    profile_img = serializers.ImageField(required=False)
+
+    def get_cleaned_data(self):
+        return {
+            'gender': self.validated_data.get('gender', ''),
+            'date_of_birth': self.validated_data.get('date_of_birth', ''),
+            'phone_number': self.validated_data.get('phone_number', ''),
+            'username': self.validated_data.get('username', ''),
+            'password1': self.validated_data.get('password1', ''),
+            'email': self.validated_data.get('email', ''),
+            'profile_img': self.validated_data.get('profile_img', ''),
+        }
+
+    def save(self, request):
+        adapter = get_adapter()
+        user = adapter.new_user(request)
+        self.cleaned_data = self.get_cleaned_data()
+
+        user.gender = self.cleaned_data['gender']
+        user.phone_number = self.cleaned_data['phone_number']
+        user.date_of_birth = self.cleaned_data['date_of_birth']
+        user.profile_img = self.cleaned_data['profile_img']
+
+        adapter.save_user(request, user, self)
+        self.custom_signup(request, user)
+        setup_user_email(request, user, [])
+
+        return user
+
+
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = MyUser
+        fields = (
+            'username',
+            'email',
+            'gender',
+            'date_of_birth',
+            'phone_number',
+            'profile_img',
+            'favorite_genre',
+            'favorite_view_ratting',
+            'favorite_making_country',
+        )
+        read_only_fields = ('username', )
+
