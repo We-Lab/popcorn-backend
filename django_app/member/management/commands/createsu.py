@@ -14,6 +14,7 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         username = config['defaultSuperuser']['username']
         password = config['defaultSuperuser']['password']
+        email = config['defaultSuperuser']['email']
         gender = config['defaultSuperuser']['gender']
         date_of_birth = config['defaultSuperuser']['date_of_birth']
         phone_number = config['defaultSuperuser']['phone_number']
@@ -21,6 +22,7 @@ class Command(BaseCommand):
             User.objects.create_superuser(
                 username=username,
                 password=password,
+                email=email,
                 gender=gender,
                 date_of_birth=date_of_birth,
                 phone_number=phone_number,
