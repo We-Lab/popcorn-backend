@@ -23,7 +23,7 @@ STATIC_ROOT = os.path.join(ROOT_DIR, 'static_root')
 
 
 # DEBUG
-DEBUG = (len(sys.argv) > 1 and sys.argv[1] == 'runserver' or 'makemigrations' or 'migrate')
+DEBUG = (len(sys.argv) > 1 and sys.argv[1] == 'runserver' or 'makemigrations' or 'migrate' or 'createsuperuser')
 print(sys.argv)
 print('DEBUG : %s' % DEBUG)
 
@@ -37,6 +37,23 @@ else:
 AUTH_USER_MODEL = 'member.MyUser'
 
 
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+
+# REST
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.TokenAuthentication',
+    )
+}
+
+REST_AUTH_REGISTER_SERIALIZERS = {
+    'REGISTER_SERIALIZER': 'member.serializers.RegistrationSerializer',
+}
+REST_AUTH_SERIALIZERS = {
+    'USER_DETAILS_SERIALIZER': 'member.serializers.UserSerializer',
+}
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.10/howto/deployment/checklist/
 
@@ -45,6 +62,8 @@ SECRET_KEY = 'zfl#cqk^ktsz%^*y3ekq0r3vx4&&p1!!i$j%i!=pscy79lqtf#'
 
 
 ALLOWED_HOSTS = [
+    'localhost',
+    '127.0.0.1',
     'popcorn-backend-dev.ap-northeast-2.elasticbeanstalk.com',
 ]
 
@@ -57,10 +76,22 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    # login
+    'rest_framework',
+    'rest_framework.authtoken',
+    'rest_auth',
+    # registeration
+    'django.contrib.sites',
+    'allauth',
+    'allauth.account',
+    'rest_auth.registration',
 
     'member',
     'movie',
 ]
+
+SITE_ID = 1
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -123,8 +154,8 @@ AUTH_PASSWORD_VALIDATORS = [
 
 
 # Internationalization
-LANGUAGE_CODE = 'en-us'
-TIME_ZONE = 'UTC'
+LANGUAGE_CODE = 'ko-kr'
+TIME_ZONE = 'Asia/Seoul'
 USE_I18N = True
 USE_L10N = True
 USE_TZ = True

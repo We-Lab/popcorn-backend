@@ -7,13 +7,22 @@ from mysite.utils.models import BaseModel
 class Genre(models.Model):
     genre = models.CharField(max_length=30)
 
+    def __str__(self):
+        return self.genre
+
 
 class ViewRating(models.Model):
     view_rating = models.CharField(max_length=30)
 
+    def __str__(self):
+        return self.view_rating
+
 
 class MakingCountry(models.Model):
     making_country = models.CharField(max_length=30)
+
+    def __str__(self):
+        return self.making_country
 
 
 class Actor(models.Model):
@@ -47,11 +56,11 @@ class Movie(models.Model):
     actors = models.ManyToManyField(Actor, through='MovieActor')
     director = models.ManyToManyField(Director)
     # 기타정보
-    making_country = models.ForeignKey(MakingCountry)
+    making_country = models.ManyToManyField(MakingCountry)
     rating_kor = models.ForeignKey(ViewRating)
     created_year = models.IntegerField()
     img_url = models.TextField()
-    run_time = models.IntegerField()
+    run_time = models.CharField(max_length=30)
     synopsis = models.TextField()
     # 옵션정보
     accumulated_viewers = models.IntegerField(blank=True)
