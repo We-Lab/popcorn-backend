@@ -56,11 +56,11 @@ class Movie(models.Model):
     actors = models.ManyToManyField(Actor, through='MovieActor')
     director = models.ManyToManyField(Director)
     # 기타정보
-    making_country = models.ForeignKey(MakingCountry)
+    making_country = models.ManyToManyField(MakingCountry)
     rating_kor = models.ForeignKey(ViewRating)
     created_year = models.IntegerField()
     img_url = models.TextField()
-    run_time = models.IntegerField()
+    run_time = models.CharField(max_length=30)
     synopsis = models.TextField()
     # 옵션정보
     accumulated_viewers = models.IntegerField(blank=True)
