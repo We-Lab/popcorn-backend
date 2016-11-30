@@ -2,7 +2,7 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser, UserManager
 from django.core.validators import MinLengthValidator, RegexValidator
 
-from movie.models import Genre, ViewRating, MakingCountry
+from movie.models import Genre, Grade, MakingCountry
 
 
 class MyUserManager(UserManager):
@@ -25,7 +25,7 @@ class MyUser(AbstractUser):
     # 선택 기입정보
     profile_img = models.ImageField(upload_to='user-profile', blank=True)
     favorite_genre = models.ManyToManyField(Genre, blank=True)
-    favorite_view_ratting = models.ManyToManyField(ViewRating, blank=True)
+    favorite_grade = models.ManyToManyField(Grade, blank=True)
     favorite_making_country = models.ManyToManyField(MakingCountry, blank=True)
     # 자동 기입정보
     date_joined = models.DateTimeField(auto_now_add=True)

@@ -5,21 +5,21 @@ from mysite.utils.models import BaseModel
 
 
 class Genre(models.Model):
-    genre = models.CharField(max_length=30)
+    genre = models.CharField(max_length=30, unique=True)
 
     def __str__(self):
         return self.genre
 
 
-class ViewRating(models.Model):
-    view_rating = models.CharField(max_length=30)
+class Grade(models.Model):
+    grade = models.CharField(max_length=30, unique=True)
 
     def __str__(self):
-        return self.view_rating
+        return self.grade
 
 
 class MakingCountry(models.Model):
-    making_country = models.CharField(max_length=30)
+    making_country = models.CharField(max_length=30, unique=True)
 
     def __str__(self):
         return self.making_country
@@ -27,19 +27,19 @@ class MakingCountry(models.Model):
 
 class Actor(models.Model):
     # 다음 배우 id
-    daum_id = models.IntegerField(unique=True)
+    daum_id = models.IntegerField(unique=True, primary_key=True)
     name_kor = models.CharField(max_length=100)
     name_eng = models.CharField(max_length=100, blank=True)
     profile_url = models.TextField()
 
 
-class ActorRole(models.Model):
-    role = models.CharField(max_length=30)
+# class ActorRole(models.Model):
+#     role = models.CharField(max_length=30)
 
 
 class Director(models.Model):
     # 다음 배우 id
-    daum_id = models.IntegerField(unique=True)
+    daum_id = models.IntegerField(unique=True, primary_key=True)
     name_kor = models.CharField(max_length=100)
     name_eng = models.CharField(max_length=100)
     profile_url = models.TextField()
@@ -47,7 +47,7 @@ class Director(models.Model):
 
 class Movie(models.Model):
     # 다음 영화 id
-    daum_id = models.IntegerField(unique=True)
+    daum_id = models.IntegerField(unique=True, primary_key=True)
     # 영화 제목
     title_kor = models.CharField(max_length=100)
     title_eng = models.CharField(max_length=100, blank=True)
@@ -57,14 +57,14 @@ class Movie(models.Model):
     director = models.ManyToManyField(Director)
     # 기타정보
     making_country = models.ManyToManyField(MakingCountry)
-    rating_kor = models.ForeignKey(ViewRating)
+    grade = models.ForeignKey(Grade)
     created_year = models.IntegerField()
     img_url = models.TextField()
     run_time = models.CharField(max_length=30)
     synopsis = models.TextField()
     # 옵션정보
-    accumulated_viewers = models.IntegerField(blank=True)
-    Release_date = models.DateField(blank=True)
+    # accumulated_viewers = models.IntegerField(blank=True)
+    Release_date = models.CharField(max_length=30, blank=True)
 
 
 class MovieImages(models.Model):
@@ -75,7 +75,7 @@ class MovieImages(models.Model):
 class MovieActor(models.Model):
     movie = models.ForeignKey(Movie)
     actor = models.ForeignKey(Actor)
-    actor_role = models.ForeignKey(ActorRole)
+    # actor_role = models.ForeignKey(ActorRole)
     character_name = models.CharField(max_length=30)
 
 
