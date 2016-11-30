@@ -37,8 +37,17 @@ else:
 AUTH_USER_MODEL = 'member.MyUser'
 
 
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+# Email
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+email_config = config['email']
+EMAIL_HOST = email_config['EMAIL_HOST']
+EMAIL_PORT = email_config['EMAIL_PORT']
+EMAIL_HOST_USER = email_config['EMAIL_HOST_USER']
+EMAIL_HOST_PASSWORD = email_config['EMAIL_HOST_PASSWORD']
+EMAIL_USE_TLS = email_config['EMAIL_USE_TLS']
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
+ACCOUNT_EMAIL_VERIFICATION = ("none")
 
 # REST
 REST_FRAMEWORK = {
