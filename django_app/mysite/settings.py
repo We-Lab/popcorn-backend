@@ -71,6 +71,7 @@ SECRET_KEY = 'zfl#cqk^ktsz%^*y3ekq0r3vx4&&p1!!i$j%i!=pscy79lqtf#'
 
 
 ALLOWED_HOSTS = [
+    '192.168.0.197',
     'localhost',
     '127.0.0.1',
     'popcorn-backend-dev.ap-northeast-2.elasticbeanstalk.com',
@@ -97,6 +98,7 @@ INSTALLED_APPS = [
 
     'member',
     'movie',
+    'test_app',
 ]
 
 SITE_ID = 1
