@@ -51,7 +51,7 @@ class UserSerializer(serializers.ModelSerializer):
             'phone_number',
             'profile_img',
             'favorite_genre',
-            'favorite_view_ratting',
+            'favorite_grade',
             'favorite_making_country',
         )
         read_only_fields = ('username', )
