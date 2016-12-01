@@ -27,10 +27,13 @@ class MakingCountry(models.Model):
 
 class Actor(models.Model):
     # 다음 배우 id
-    daum_id = models.IntegerField(unique=True, primary_key=True)
+    daum_id = models.IntegerField(unique=True)
     name_kor = models.CharField(max_length=100)
     name_eng = models.CharField(max_length=100, blank=True)
     profile_url = models.TextField()
+
+    def __str__(self):
+        return self.name_kor
 
 
 # class ActorRole(models.Model):
@@ -39,15 +42,18 @@ class Actor(models.Model):
 
 class Director(models.Model):
     # 다음 배우 id
-    daum_id = models.IntegerField(unique=True, primary_key=True)
+    daum_id = models.IntegerField(unique=True)
     name_kor = models.CharField(max_length=100)
     name_eng = models.CharField(max_length=100)
     profile_url = models.TextField()
 
+    def __str__(self):
+        return self.name_kor
+
 
 class Movie(models.Model):
     # 다음 영화 id
-    daum_id = models.IntegerField(unique=True, primary_key=True)
+    daum_id = models.IntegerField(unique=True)
     # 영화 제목
     title_kor = models.CharField(max_length=100)
     title_eng = models.CharField(max_length=100, blank=True)
