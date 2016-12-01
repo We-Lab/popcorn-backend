@@ -4,6 +4,7 @@ from bs4 import BeautifulSoup
 from django.shortcuts import render
 from pyparsing import makeHTMLTags, withAttribute
 from movie.models import Movie, Grade, Genre, MakingCountry, MovieImages, Actor, MovieActor, Director
+from mysite import settings
 
 __all__ = [
     'movie_search',
@@ -11,7 +12,7 @@ __all__ = [
 
 
 def movie_search(keyword, daum_id=None):
-    r = requests.get("https://apis.daum.net/contents/movie?apikey=358db64964d2f7061839554087090343&q={}&output=json".format(keyword))
+    r = requests.get("https://apis.daum.net/contents/movie?apikey={}&q={}&output=json".format(settings.DAUM_API_KEY, keyword))
     movie_search = r.json()
     movies_search = []
     num_of_movies = movie_search.get("channel").get("totalCount")

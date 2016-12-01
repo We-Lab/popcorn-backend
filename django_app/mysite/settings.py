@@ -37,6 +37,8 @@ else:
 # Auth
 AUTH_USER_MODEL = 'member.MyUser'
 
+# daum
+DAUM_API_KEY = config['daumApiKey']['KEY']
 
 # Email
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
