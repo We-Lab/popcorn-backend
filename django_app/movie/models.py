@@ -92,7 +92,7 @@ class MovieActor(models.Model):
 class Comment(BaseModel):
     author = models.ForeignKey(settings.AUTH_USER_MODEL)
     movie = models.ForeignKey(Movie)
-    star = models.IntegerField(default=10, validators=[MaxValueValidator(10), MinValueValidator(1)])
+    star = models.IntegerField(validators=[MaxValueValidator(10), MinValueValidator(1)])
     content = models.CharField(max_length=100, blank=True)
     like_users = models.ManyToManyField(settings.AUTH_USER_MODEL, through='CommentLike', related_name='comment_set_like_users')
 
