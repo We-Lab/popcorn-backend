@@ -1,8 +1,37 @@
 from rest_framework import serializers
-from movie.models import Movie, MovieImages, Actor
+from movie.models import Movie, MovieImages, Actor, Director
+
+
+class DirectorSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Director
+        fields = (
+            'name_kor',
+            'name_eng',
+        )
+
+
+class DirectorDetailSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Director
+        fields = (
+            'daum_id',
+            'name_kor',
+            'name_eng',
+            'profile_url',
+        )
 
 
 class ActorSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Actor
+        fields = (
+            'name_kor',
+            'name_eng',
+        )
+
+
+class ActorDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = Actor
         fields = (
@@ -23,17 +52,28 @@ class MovieImageSerializer(serializers.ModelSerializer):
 
 
 class MovieSerializer(serializers.ModelSerializer):
-    # actor_list = ActorSerializer(many=True, source='actor_set')
+    director = DirectorSerializer(many=True, read_only=True)
+    actors = ActorSerializer(many=True, read_only=True)
+    genre = serializers.SlugRelatedField(
+        many=True,
+        read_only=True,
+        slug_field='genre'
+    )
+    grade = serializers.SlugRelatedField(
+        read_only=True,
+        slug_field='grade',
+    )
 
     class Meta:
         model = Movie
         fields = (
+            'pk',
             'daum_id',
             'title_kor',
             'title_eng',
             'genre',
-            'actors',
             'director',
+            'actors',
             'grade',
             'created_year',
             'img_url',
@@ -42,7 +82,18 @@ class MovieSerializer(serializers.ModelSerializer):
 
 
 class MovieDetailSerializer(serializers.ModelSerializer):
-    image_set = MovieImageSerializer(many=True, source='movieimages_set')
+    image_set = MovieImageSerializer(many=True, read_only=True)
+    director = DirectorDetailSerializer(many=True, read_only=True)
+    actors = ActorDetailSerializer(many=True, read_only=True)
+    genre = serializers.SlugRelatedField(
+        many=True,
+        read_only=True,
+        slug_field='genre'
+    )
+    grade = serializers.SlugRelatedField(
+        read_only=True,
+        slug_field='grade',
+    )
 
     class Meta:
         model = Movie
@@ -51,8 +102,8 @@ class MovieDetailSerializer(serializers.ModelSerializer):
             'title_kor',
             'title_eng',
             'genre',
-            'actors',
             'director',
+            'actors',
             'grade',
             'created_year',
             'img_url',
