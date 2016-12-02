@@ -73,6 +73,8 @@ class Movie(models.Model):
     # accumulated_viewers = models.IntegerField(blank=True)
     Release_date = models.CharField(max_length=30, blank=True)
 
+    def __str__(self):
+        return self.title_kor
 
 class MovieImages(models.Model):
     movie = models.ForeignKey(Movie)
@@ -105,6 +107,7 @@ class CommentLike(BaseModel):
 class FamousLine(BaseModel):
     movie = models.ForeignKey(Movie)
     actor = models.ForeignKey(Actor)
+    author = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='FamousLineAuthor')
     content = models.CharField(max_length=100)
     like_users = models.ManyToManyField(settings.AUTH_USER_MODEL, through='FamousLike')
 

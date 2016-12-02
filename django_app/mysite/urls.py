@@ -17,7 +17,7 @@ from django.conf.urls import url, include
 from django.contrib import admin
 
 apis_patterns = [
-    url(r'^movie/', include('movie.urls.apis')),
+    url(r'^movie/', include('movie.urls.apis', namespace='movie')),
 ]
 
 
@@ -26,6 +26,6 @@ urlpatterns = [
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     url(r'^rest-auth/', include('rest_auth.urls')),
     url(r'^rest-auth/registration/', include('rest_auth.registration.urls')),
-    url(r'^test-api/', include('test_app.urls')),
+    url(r'^test-api/', include('test_app.urls', namespace='test')),
     url(r'', include(apis_patterns)),
 ]
