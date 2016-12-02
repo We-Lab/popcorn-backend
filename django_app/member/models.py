@@ -21,8 +21,8 @@ class MyUser(AbstractUser):
     email = models.EmailField(max_length=100)
     gender = models.CharField(max_length=30, choices=GENDER_CHOICES)
     date_of_birth = models.DateField()
-    phone_number = models.CharField(max_length=13, validators=[MinLengthValidator(10)])
     # 선택 기입정보
+    phone_number = models.CharField(max_length=13, validators=[MinLengthValidator(10)], blank=True)
     profile_img = models.ImageField(upload_to='user-profile', blank=True)
     favorite_genre = models.ManyToManyField(Genre, blank=True)
     favorite_grade = models.ManyToManyField(Grade, blank=True)
