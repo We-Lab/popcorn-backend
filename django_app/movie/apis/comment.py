@@ -1,4 +1,5 @@
 from django.http import Http404
+from rest_framework import permissions
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -10,15 +11,16 @@ from movie.serializers.comment import CommentSerializer
 
 
 class CommentAPIView(APIView):
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly, )
+
     def get(self, request, *args, **kwargs):
-        comments = Comment.objects.filter(movie=kwargs.get('movie'))
+        comments = Comment.objects.filter(movie_id=kwargs.get('movie_id'))
         serializer = CommentSerializer(comments, many=True)
         return Response(serializer.data)
 
     def post(self, request, *args, **kwargs):
-        movie_id = request.GET.get('daum_id', '')
-        movie = Movie.objects.get(movie_id)
-        author = MyUser.objects.get(pk=request.myuser.pk)
+        movie = Movie.objects.get(id=kwargs.get('movie_id'))
+        author = MyUser.objects.get(pk=request.user.pk)
         serializer = CommentSerializer(data=request.data)
         if serializer.is_valid():
             serializer.validated_data['movie'] = movie
@@ -29,21 +31,24 @@ class CommentAPIView(APIView):
 
 
 class CommentDetailAPIView(APIView):
-    permission_classes = (IsOwnerOrReadOnly, )
 
-    def get_object(self, pk):
+    permission_classes = (IsOwnerOrReadOnly,)
+
+    def get_object(self, movie_id, pk):
         try:
-            return Comment.objects.get(pk=pk)
+            obj = Comment.objects.filter(movie_id=movie_id)[int(pk)-1]
+            self.check_object_permissions(self.request, obj)
+            return obj
         except Comment.DoesNotExist:
             raise Http404
 
     def get(self, request, *args, **kwargs):
-        comment = self.get_object(pk=kwargs.get('comment_pk'))
+        comment = self.get_object(movie_id=kwargs.get('movie_id'), pk=kwargs.get('pk'))
         serializer = CommentSerializer(comment)
         return Response(serializer.data)
 
     def put(self, request, *args, **kwargs):
-        comment = self.get_object(pk=kwargs.get('comment_pk'))
+        comment = self.get_object(movie_id=kwargs.get('movie_id'), pk=kwargs.get('pk'))
         serializer = CommentSerializer(comment, data=request.data)
         if serializer.is_valid():
             serializer.save()
@@ -51,6 +56,6 @@ class CommentDetailAPIView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request, *args, **kwargs):
-        comment = self.get_object(pk=kwargs.get('comment_pk'))
+        comment = self.get_object(movie_id=kwargs.get('movie_id'), pk=kwargs.get('pk'))
         comment.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)

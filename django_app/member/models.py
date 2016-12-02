@@ -21,8 +21,8 @@ class MyUser(AbstractUser):
     email = models.EmailField(max_length=100)
     gender = models.CharField(max_length=30, choices=GENDER_CHOICES)
     date_of_birth = models.DateField()
-    phone_number = models.CharField(max_length=13, validators=[MinLengthValidator(10)])
     # 선택 기입정보
+    phone_number = models.CharField(max_length=13, validators=[MinLengthValidator(10)], blank=True)
     profile_img = models.ImageField(upload_to='user-profile', blank=True)
     favorite_genre = models.ManyToManyField(Genre, blank=True)
     favorite_grade = models.ManyToManyField(Grade, blank=True)
@@ -30,10 +30,10 @@ class MyUser(AbstractUser):
     # 자동 기입정보
     date_joined = models.DateTimeField(auto_now_add=True)
 
-    REQUIRED_FIELDS = ('email', 'gender', 'date_of_birth', 'phone_number')
+    REQUIRED_FIELDS = ('email', 'gender', 'date_of_birth', )
 
     def __str__(self):
-        return self.get_full_name()
+        return self.username
 
     # phone_number '-' 삭제
     def save(self, *args, **kwargs):

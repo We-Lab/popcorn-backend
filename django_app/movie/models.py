@@ -2,6 +2,7 @@ from django.db import models
 
 from mysite import settings
 from mysite.utils.models import BaseModel
+from django.core.validators import MaxValueValidator, MinValueValidator
 
 
 class Genre(models.Model):
@@ -72,6 +73,9 @@ class Movie(models.Model):
     # accumulated_viewers = models.IntegerField(blank=True)
     Release_date = models.CharField(max_length=30, blank=True)
 
+    def __str__(self):
+        return self.title_kor
+
 
 class MovieImages(models.Model):
     movie = models.ForeignKey(Movie)
@@ -88,7 +92,7 @@ class MovieActor(models.Model):
 class Comment(BaseModel):
     author = models.ForeignKey(settings.AUTH_USER_MODEL)
     movie = models.ForeignKey(Movie)
-    star = models.IntegerField()
+    star = models.IntegerField(default=10, validators=[MaxValueValidator(10), MinValueValidator(1)])
     content = models.CharField(max_length=100, blank=True)
     like_users = models.ManyToManyField(settings.AUTH_USER_MODEL, through='CommentLike', related_name='comment_set_like_users')
 
@@ -104,6 +108,7 @@ class CommentLike(BaseModel):
 class FamousLine(BaseModel):
     movie = models.ForeignKey(Movie)
     actor = models.ForeignKey(Actor)
+    author = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='FamousLineAuthor')
     content = models.CharField(max_length=100)
     like_users = models.ManyToManyField(settings.AUTH_USER_MODEL, through='FamousLike')
 
