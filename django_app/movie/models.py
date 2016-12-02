@@ -76,6 +76,7 @@ class Movie(models.Model):
     def __str__(self):
         return self.title_kor
 
+
 class MovieImages(models.Model):
     movie = models.ForeignKey(Movie)
     url = models.CharField(max_length=100)

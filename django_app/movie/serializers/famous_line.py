@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from movie.models import FamousLine, Actor
+from movie.models import FamousLine, Actor, Movie
 from movie.serializers.comment import UsernameSerializer, MovieTitleSerializer
 
 
@@ -17,5 +17,4 @@ class FamousLineSerializer(serializers.ModelSerializer):
             'content',
             'created_date',
         )
-
 

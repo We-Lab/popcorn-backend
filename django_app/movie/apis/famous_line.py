@@ -1,9 +1,10 @@
 from django.http import Http404
 from rest_framework import status
+from rest_framework.exceptions import NotAcceptable
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from movie.models import FamousLine, Movie
+from movie.models import FamousLine, Movie, Actor
 from movie.permissions import IsOwnerOrReadOnly
 from movie.serializers.famous_line import FamousLineSerializer
 
@@ -16,6 +17,10 @@ class FamousLineAPIView(APIView):
 
     def post(self, request, *args, **kwargs):
         movie = Movie.objects.get(pk=kwargs.get('movie_id'))
+        a1 = Actor.objects.filter(movie__pk=kwargs.get('movie_id'))
+        a2 = Actor.objects.get(pk=request.data['actor'])
+        if a2 not in [i for i in a1]:
+            raise NotAcceptable('해당 배우를 찾을 수 없습니다')
         author = request.user
         serializer = FamousLineSerializer(data=request.data)
         if serializer.is_valid():
