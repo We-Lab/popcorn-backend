@@ -30,10 +30,10 @@ class MyUser(AbstractUser):
     # 자동 기입정보
     date_joined = models.DateTimeField(auto_now_add=True)
 
-    REQUIRED_FIELDS = ('email', 'gender', 'date_of_birth', 'phone_number')
+    REQUIRED_FIELDS = ('email', 'gender', 'date_of_birth', )
 
     def __str__(self):
-        return self.get_full_name()
+        return self.username
 
     # phone_number '-' 삭제
     def save(self, *args, **kwargs):
