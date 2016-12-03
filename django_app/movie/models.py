@@ -118,10 +118,10 @@ class FamousLike(BaseModel):
     user = models.ForeignKey(settings.AUTH_USER_MODEL)
 
 
-class BoxOfficeMovie(models.Model):
+class BoxOfficeMovie(BaseModel):
     movie = models.ForeignKey(Movie)
+    release_date = models.DateField()
     ticketing_rate = models.FloatField(max_length=10)
-    img_url = models.TextField()
 
 
 class Magazine(BaseModel):
