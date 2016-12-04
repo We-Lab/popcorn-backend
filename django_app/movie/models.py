@@ -99,10 +99,23 @@ class Comment(BaseModel):
     class Meta:
         unique_together = (('author', 'movie'),)
 
+    def __str__(self):
+        return self.movie.__str__() + '|' + self.author.__str__()
+
+    @property
+    def likes_count(self):
+        return self.commentlike_set.count()
+
 
 class CommentLike(BaseModel):
     comment = models.ForeignKey(Comment)
     user = models.ForeignKey(settings.AUTH_USER_MODEL)
+
+    def __str__(self):
+        return self.comment.__str__() + '|' + self.user.__str__()
+
+    # def user_in_like_list(self):
+    #     return CommentLike.objects.filter(user=self.user, comment=self.comment)
 
 
 class FamousLine(BaseModel):

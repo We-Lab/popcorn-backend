@@ -30,22 +30,7 @@ class CommentSerializer(serializers.ModelSerializer):
             'author',
             'star',
             'content',
-            'created_date',
-        )
-
-
-class CommentDetailSerializer(serializers.ModelSerializer):
-    movie = MovieSerializer(read_only=True)
-    author = UserSerializer(read_only=True)
-
-    class Meta:
-        model = Comment
-        fields = (
-            'id',
-            'movie',
-            'author',
-            'star',
-            'content',
+            'likes_count',
             'created_date',
         )
 
@@ -56,3 +41,20 @@ class CommentLikeSerializer(serializers.ModelSerializer):
     class Meta:
         model = CommentLike
         fields = ('user', )
+
+
+# class CommentDetailSerializer(serializers.ModelSerializer):
+#     movie = MovieSerializer(read_only=True)
+#     author = UserSerializer(read_only=True)
+#
+#     class Meta:
+#         model = Comment
+#         fields = (
+#             'id',
+#             'movie',
+#             'author',
+#             'star',
+#             'content',
+#             'likes_count',
+#             'created_date',
+#         )
