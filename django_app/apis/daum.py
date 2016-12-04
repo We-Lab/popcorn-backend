@@ -1,12 +1,8 @@
 import re
 import requests
 from bs4 import BeautifulSoup
-from django.shortcuts import render
 from pyparsing import makeHTMLTags, withAttribute
-from requests import Response
-
 from movie.models import Movie, Grade, Genre, MakingCountry, MovieImages, Actor, MovieActor, Director
-from movie.serializers.movie import MovieDetailSerializer
 from mysite import settings
 
 __all__ = [
