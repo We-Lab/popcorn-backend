@@ -114,9 +114,10 @@ class MovieSerializer(serializers.ModelSerializer):
 
 
 class MovieDetailSerializer(serializers.ModelSerializer):
-    image_set = MovieImageSerializer(many=True, read_only=True)
+    image_set = MovieImageSerializer(many=True, read_only=True, source='movieimages_set')
     director = DirectorDetailSerializer(many=True, read_only=True)
     actors = ActorDetailSerializer(many=True, read_only=True)
+    comments = CommentSerializer(many=True, read_only=True, source='comment_set')
     genre = serializers.SlugRelatedField(
         many=True,
         read_only=True,
@@ -126,6 +127,7 @@ class MovieDetailSerializer(serializers.ModelSerializer):
         read_only=True,
         slug_field='grade',
     )
+    star_average = serializers.ReadOnlyField()
 
     class Meta:
         model = Movie
@@ -142,4 +144,7 @@ class MovieDetailSerializer(serializers.ModelSerializer):
             'run_time',
             'synopsis',
             'image_set',
+            'comments',
+            'main_trailer',
+            'star_average',
         )
