@@ -77,7 +77,8 @@ class MovieImageSerializer(serializers.ModelSerializer):
     class Meta:
         model = MovieImages
         fields = (
-            # 'movie',
+            'id',
+            'movie',
             'url',
         )
 
