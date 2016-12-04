@@ -10,6 +10,82 @@ __all__ = [
 ]
 
 
+def people(request):
+    people_info = []
+    try:
+        people_response = requests.get(request)
+        bs_people = BeautifulSoup(people_response.text, "html.parser")
+        count = 0
+
+        while True:
+            used_link = bs_people.select("ul.list_join li")[count]
+            actor_role = used_link.select('span.txt_join')[0].text
+            name_kor = used_link.select('em.emph_point')[0].text
+            name_kor_eng = used_link.select('strong.tit_join')[0].text
+            len_of_name_kor = len(name_kor) + 1
+            name_eng = name_kor_eng[len_of_name_kor:]
+            a_tag = used_link.findAll('a', attrs={'href': re.compile("/person/")})[0]
+            actor_id = re.findall(r'\d+', a_tag['href'])
+            img_tag = used_link.select("img")[0]
+            profile_url = img_tag['src']
+            people_info.append(
+                {'character_name': actor_role, 'daum_id': actor_id, 'name_eng': name_eng, 'name_kor': name_kor, 'profile_url': profile_url})
+            count += 1
+    except:
+        pass
+    return people_info
+
+
+def video_search(request):
+    video_response = requests.get(request)
+    bs_videos = BeautifulSoup(video_response.text, 'html.parser')
+    meta, metaEng = makeHTMLTags("meta")
+    img_meta = meta.copy().setParseAction(withAttribute(('property', 'og:image')))
+    for img in img_meta.searchString(bs_videos):
+        content = img.content
+        video_trailer_id = content.split("/")[-2]
+        video_trailer_url = "http://videofarm.daum.net/controller/video/viewer/Video.html?vid={}&play_loc=daum_movie&autoplay=true".format(video_trailer_id)
+    return video_trailer_url
+
+
+def resize_image(request):
+    index = 4
+    image_split = request.rsplit('/', 5)
+    replacement = ['R200x0.q99', 'R500x0.q99', 'R700x0.q99']
+    movie_img_url = []
+    for nums in range(3):
+        image_split[index] = replacement[nums]
+        movie_img_url.append('/'.join(image_split))
+    return movie_img_url
+
+
+def list_genorater(movie_search, num, request):
+    count = 0
+    list = []
+    while True:
+        try:
+            detail = movie_search.get("channel").get("item")[int(num)].get(request)[count].get("content")
+            list.append(detail)
+            count += 1
+        except:
+            break
+    return list
+
+
+def resized_image_list_genorater(movie_search, num, request):
+    count = 1
+    resized_list = []
+    while True:
+        try:
+            detail = movie_search.get("channel").get("item")[int(num)].get(request + "{}".format(count)).get("content")
+            resized_detail = resize_image(detail)
+            resized_list.append(resized_detail)
+            count += 1
+        except:
+            break
+    return resized_list
+
+
 def movie_search(keyword):
     r = requests.get("https://apis.daum.net/contents/movie?apikey={}&q={}&output=json".format(settings.DAUM_API_KEY, keyword))
     movie_search = r.json()
