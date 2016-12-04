@@ -99,7 +99,7 @@ class MovieSerializer(serializers.ModelSerializer):
     class Meta:
         model = Movie
         fields = (
-            'pk',
+            'id',
             'daum_id',
             'title_kor',
             'title_eng',
