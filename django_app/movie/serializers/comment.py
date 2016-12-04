@@ -2,19 +2,17 @@ from rest_framework import serializers
 
 from member.models import MyUser
 from member.serializers import UserSerializer
-from movie.models import Comment, Movie
+from movie.models import Comment, Movie, CommentLike
 from movie.serializers.movie import MovieSerializer
 
 
 class MovieTitleSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = Movie
         fields = ('title_kor', )
 
 
 class UsernameSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = MyUser
         fields = ('username', )
@@ -50,3 +48,11 @@ class CommentDetailSerializer(serializers.ModelSerializer):
             'content',
             'created_date',
         )
+
+
+class CommentLikeSerializer(serializers.ModelSerializer):
+    user = UsernameSerializer(read_only=True)
+
+    class Meta:
+        model = CommentLike
+        fields = ('user', )
