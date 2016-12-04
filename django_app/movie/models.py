@@ -1,5 +1,4 @@
 from django.db import models
-
 from mysite import settings
 from mysite.utils.models import BaseModel
 from django.core.validators import MaxValueValidator, MinValueValidator
@@ -67,14 +66,28 @@ class Movie(models.Model):
     grade = models.ForeignKey(Grade)
     created_year = models.IntegerField()
     img_url = models.TextField()
+    main_trailer = models.TextField()
     run_time = models.CharField(max_length=30)
     synopsis = models.TextField()
     # 옵션정보
     # accumulated_viewers = models.IntegerField(blank=True)
     Release_date = models.CharField(max_length=30, blank=True)
 
+
+    @property
+    def star_average(self):
+        try:
+            movie_star = [comment.star for comment in Comment.objects.filter(movie_id=self.pk)]
+            average = sum(movie_star) / len(movie_star)
+            return average
+        except:
+            return '평점을 남겨주세요'
+
+
     def __str__(self):
         return self.title_kor
+
+
 
 
 class MovieImages(models.Model):
