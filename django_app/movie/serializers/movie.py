@@ -1,5 +1,36 @@
 from rest_framework import serializers
-from movie.models import Movie, MovieImages, Actor, Director
+from member.models import MyUser
+from movie.models import Movie, MovieImages, Actor, Director, Comment
+
+
+class MovieTitleSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Movie
+        fields = ('title_kor', )
+
+
+class UsernameSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = MyUser
+        fields = ('username', )
+
+
+class CommentSerializer(serializers.ModelSerializer):
+    movie = MovieTitleSerializer(read_only=True)
+    author = UsernameSerializer(read_only=True)
+
+    class Meta:
+        model = Comment
+        fields = (
+            'id',
+            'movie',
+            'author',
+            'star',
+            'content',
+            'created_date',
+        )
 
 
 class DirectorSerializer(serializers.ModelSerializer):
