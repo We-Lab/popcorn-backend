@@ -92,7 +92,7 @@ class MovieActor(models.Model):
 class Comment(BaseModel):
     author = models.ForeignKey(settings.AUTH_USER_MODEL)
     movie = models.ForeignKey(Movie)
-    star = models.IntegerField(default=10, validators=[MaxValueValidator(10), MinValueValidator(1)])
+    star = models.IntegerField(validators=[MaxValueValidator(10), MinValueValidator(1)])
     content = models.CharField(max_length=100, blank=True)
     like_users = models.ManyToManyField(settings.AUTH_USER_MODEL, through='CommentLike', related_name='comment_set_like_users')
 
@@ -118,10 +118,10 @@ class FamousLike(BaseModel):
     user = models.ForeignKey(settings.AUTH_USER_MODEL)
 
 
-class BoxOfficeMovie(models.Model):
+class BoxOfficeMovie(BaseModel):
     movie = models.ForeignKey(Movie)
+    release_date = models.DateField()
     ticketing_rate = models.FloatField(max_length=10)
-    img_url = models.TextField()
 
 
 class Magazine(BaseModel):
