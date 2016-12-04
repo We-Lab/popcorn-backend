@@ -114,9 +114,6 @@ class CommentLike(BaseModel):
     def __str__(self):
         return self.comment.__str__() + '|' + self.user.__str__()
 
-    # def user_in_like_list(self):
-    #     return CommentLike.objects.filter(user=self.user, comment=self.comment)
-
 
 class FamousLine(BaseModel):
     movie = models.ForeignKey(Movie)
