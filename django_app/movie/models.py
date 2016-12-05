@@ -1,5 +1,4 @@
 from django.db import models
-
 from mysite import settings
 from mysite.utils.models import BaseModel
 from django.core.validators import MaxValueValidator, MinValueValidator
@@ -67,14 +66,27 @@ class Movie(models.Model):
     grade = models.ForeignKey(Grade)
     created_year = models.IntegerField()
     img_url = models.TextField()
+    main_trailer = models.TextField()
+    videos = models.TextField()
     run_time = models.CharField(max_length=30)
     synopsis = models.TextField()
     # 옵션정보
     # accumulated_viewers = models.IntegerField(blank=True)
     Release_date = models.CharField(max_length=30, blank=True)
 
+
+    @property
+    def star_average(self):
+        try:
+            movie_star = [comment.star for comment in Comment.objects.filter(movie_id=self.pk)]
+            average = sum(movie_star) / len(movie_star)
+            return average
+        except:
+            return '평점을 남겨주세요'
+
     def __str__(self):
         return self.title_kor
+
 
 class MovieImages(models.Model):
     movie = models.ForeignKey(Movie)
@@ -91,17 +103,27 @@ class MovieActor(models.Model):
 class Comment(BaseModel):
     author = models.ForeignKey(settings.AUTH_USER_MODEL)
     movie = models.ForeignKey(Movie)
-    star = models.IntegerField(default=10, validators=[MaxValueValidator(10), MinValueValidator(1)])
+    star = models.IntegerField(validators=[MaxValueValidator(10), MinValueValidator(1)])
     content = models.CharField(max_length=100, blank=True)
     like_users = models.ManyToManyField(settings.AUTH_USER_MODEL, through='CommentLike', related_name='comment_set_like_users')
 
     class Meta:
         unique_together = (('author', 'movie'),)
 
+    def __str__(self):
+        return 'commnt' + self.movie.__str__() + '|' + self.author.__str__()
+
+    @property
+    def likes_count(self):
+        return self.commentlike_set.count()
+
 
 class CommentLike(BaseModel):
     comment = models.ForeignKey(Comment)
     user = models.ForeignKey(settings.AUTH_USER_MODEL)
+
+    def __str__(self):
+        return self.comment.__str__() + '|' + self.user.__str__()
 
 
 class FamousLine(BaseModel):
@@ -111,16 +133,23 @@ class FamousLine(BaseModel):
     content = models.CharField(max_length=100)
     like_users = models.ManyToManyField(settings.AUTH_USER_MODEL, through='FamousLike')
 
+    def __str__(self):
+        return 'famousLine' + self.movie.__str__() + '|' + self.author.__str__()
+
+    @property
+    def likes_count(self):
+        return self.famouslike_set.coount()
+
 
 class FamousLike(BaseModel):
     famous_line = models.ForeignKey(FamousLine)
     user = models.ForeignKey(settings.AUTH_USER_MODEL)
 
 
-class BoxOfficeMovie(models.Model):
+class BoxOfficeMovie(BaseModel):
     movie = models.ForeignKey(Movie)
+    release_date = models.DateField()
     ticketing_rate = models.FloatField(max_length=10)
-    img_url = models.TextField()
 
 
 class Magazine(BaseModel):
