@@ -4,7 +4,16 @@ from movie.models import Movie, MovieImages, Actor, Director, Comment, FamousLin
 
 
 # from movie.serializers.famous_line import FamousLineSerializer
-#
+
+
+class MovieIdTitleSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Movie
+        fields = (
+            'id',
+            'title_kor',
+        )
+
 
 class MovieTitleSerializer(serializers.ModelSerializer):
 
