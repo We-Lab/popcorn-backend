@@ -12,6 +12,8 @@ from movie.serializers.famous_line import FamousLineSerializer, FamousLikeSerial
 
 
 class FamousLineAPIView(APIView):
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+
     def get(self, request, *args, **kwargs):
         famous_line = FamousLine.objects.filter(movie=kwargs.get('movie_id')).order_by('-created_date')
         serializer = FamousLineSerializer(famous_line, many=True)
@@ -34,21 +36,21 @@ class FamousLineDetailAPIView(APIView):
 
     permission_classes = (IsOwnerOrReadOnly,)
 
-    def get_object(self, movie_id, pk):
+    def get_object(self, famous_id):
         try:
-            obj = FamousLine.objects.filter(movie_id=movie_id)[int(pk)-1]
+            obj = FamousLine.objects.get(id=famous_id)
             self.check_object_permissions(self.request, obj)
             return obj
         except FamousLine.DoesNotExist:
             raise Http404
 
     def get(self, request, *args, **kwargs):
-        famous_line = self.get_object(movie_id=kwargs.get('movie_id'), pk=kwargs.get('pk'))
+        famous_line = self.get_object(famous_id=kwargs.get('famous_id'))
         serializer = FamousLineSerializer(famous_line)
         return Response(serializer.data)
 
     def put(self, request, *args, **kwargs):
-        famous_line = self.get_object(movie_id=kwargs.get('movie_id'), pk=kwargs.get('pk'))
+        famous_line = self.get_object(famous_id=kwargs.get('famous_id'))
         serializer = FamousLineSerializer(famous_line, data=request.data)
         if serializer.is_valid():
             serializer.save()
@@ -56,7 +58,7 @@ class FamousLineDetailAPIView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request, *args, **kwargs):
-        famous_line = self.get_object(movie_id=kwargs.get('movie_id'), pk=kwargs.get('pk'))
+        famous_line = self.get_object(famous_id=kwargs.get('famous_id'))
         famous_line.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
