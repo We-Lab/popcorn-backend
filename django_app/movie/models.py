@@ -113,7 +113,7 @@ class Comment(BaseModel):
         unique_together = (('author', 'movie'),)
 
     def __str__(self):
-        return self.movie.__str__() + '|' + self.author.__str__()
+        return 'commnt' + self.movie.__str__() + '|' + self.author.__str__()
 
     @property
     def likes_count(self):
@@ -134,6 +134,13 @@ class FamousLine(BaseModel):
     author = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='FamousLineAuthor')
     content = models.CharField(max_length=100)
     like_users = models.ManyToManyField(settings.AUTH_USER_MODEL, through='FamousLike')
+
+    def __str__(self):
+        return 'famousLine' + self.movie.__str__() + '|' + self.author.__str__()
+
+    @property
+    def likes_count(self):
+        return self.famouslike_set.coount()
 
 
 class FamousLike(BaseModel):

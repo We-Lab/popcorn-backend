@@ -21,7 +21,7 @@ class UsernameSerializer(serializers.ModelSerializer):
 class CommentSerializer(serializers.ModelSerializer):
     movie = MovieTitleSerializer(read_only=True)
     author = UsernameSerializer(read_only=True)
-    like_users = UsernameSerializer(read_only=True, many=True)
+    # like_users = UsernameSerializer(read_only=True, many=True)
 
     # like_users 필드로 사용자의 좋아요 선택여부 판단 가능
     class Meta:
