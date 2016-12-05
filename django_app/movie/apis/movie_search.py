@@ -7,27 +7,42 @@ from movie.serializers.movie import MovieDetailSerializer, MovieSerializer
 
 
 class MovieSearch(APIView):
-    def get(self, request, pk=None):
+    def get(self, request):
         keyword = request.GET.get('keyword')
-        keyword = "".join(keyword.split())
-        title = movie_search(keyword)
-        hash_kor = title[0].split()[0]
-        hash_eng = title[1].split()[0]
 
-        if Movie.objects.filter(title_kor__icontains=keyword):
+        title = movie_search(keyword)
+
+
+        hash_kor = title[0].split()[0]
+        try:
+            hash_kor1 = title[0].split()[1]
+        except:
+            hash_kor1 = ''
+
+        try:
+            hash_eng = title[1].split()[0]
+        except:
+            hash_eng = ''
+
+        try:
+            hash_eng1 = title[1].split()[1]
+        except:
+            hash_eng1 = ''
+
+        if Movie.objects.filter(title_kor__icontains=keyword).exists():
             movie = Movie.objects.filter(title_kor__icontains=keyword)
             serializer = MovieSerializer(movie, many=True)
             return Response(serializer.data)
-        elif Movie.objects.filter(title_eng__icontains=keyword):
+        elif Movie.objects.filter(title_eng__icontains=keyword).exists():
             movie = Movie.objects.filter(title_eng__icontains=keyword)
             serializer = MovieSerializer(movie, many=True)
             return Response(serializer.data)
-        elif Movie.objects.filter(title_kor__icontains=hash_kor):
-            movie = Movie.objects.filter(title_kor__icontains=hash_kor)
+        elif Movie.objects.filter(title_kor__icontains=hash_kor).exists() and Movie.objects.filter(title_kor__icontains=hash_kor1).exists():
+            movie = Movie.objects.filter(title_kor__icontains=hash_kor).filter(title_kor__icontains=hash_kor1)
             serializer = MovieSerializer(movie, many=True)
             return Response(serializer.data)
-        elif Movie.objects.filter(title_eng__icontains=hash_eng):
-            movie = Movie.objects.filter(title_eng__icontains=hash_eng)
+        elif Movie.objects.filter(title_eng__icontains=hash_eng).exists() and Movie.objects.filter(title_eng__icontains=hash_eng1).exists():
+            movie = Movie.objects.filter(title_eng__icontains=hash_eng).filter(title_eng__icontains=hash_eng1)
             serializer = MovieSerializer(movie, many=True)
             return Response(serializer.data)
         else:
