@@ -1,5 +1,36 @@
 from rest_framework import serializers
-from movie.models import Movie, MovieImages, Actor, Director
+from member.models import MyUser
+from movie.models import Movie, MovieImages, Actor, Director, Comment
+
+
+class MovieTitleSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Movie
+        fields = ('title_kor', )
+
+
+class UsernameSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = MyUser
+        fields = ('username', )
+
+
+class CommentSerializer(serializers.ModelSerializer):
+    movie = MovieTitleSerializer(read_only=True)
+    author = UsernameSerializer(read_only=True)
+
+    class Meta:
+        model = Comment
+        fields = (
+            'id',
+            'movie',
+            'author',
+            'star',
+            'content',
+            'created_date',
+        )
 
 
 class DirectorSerializer(serializers.ModelSerializer):
@@ -46,7 +77,8 @@ class MovieImageSerializer(serializers.ModelSerializer):
     class Meta:
         model = MovieImages
         fields = (
-            # 'movie',
+            'id',
+            'movie',
             'url',
         )
 
@@ -67,7 +99,7 @@ class MovieSerializer(serializers.ModelSerializer):
     class Meta:
         model = Movie
         fields = (
-            'pk',
+            'id',
             'daum_id',
             'title_kor',
             'title_eng',
@@ -82,9 +114,10 @@ class MovieSerializer(serializers.ModelSerializer):
 
 
 class MovieDetailSerializer(serializers.ModelSerializer):
-    image_set = MovieImageSerializer(many=True, read_only=True)
+    image_set = MovieImageSerializer(many=True, read_only=True, source='movieimages_set')
     director = DirectorDetailSerializer(many=True, read_only=True)
     actors = ActorDetailSerializer(many=True, read_only=True)
+    comments = CommentSerializer(many=True, read_only=True, source='comment_set')
     genre = serializers.SlugRelatedField(
         many=True,
         read_only=True,
@@ -94,6 +127,7 @@ class MovieDetailSerializer(serializers.ModelSerializer):
         read_only=True,
         slug_field='grade',
     )
+    star_average = serializers.ReadOnlyField()
 
     class Meta:
         model = Movie
@@ -110,4 +144,7 @@ class MovieDetailSerializer(serializers.ModelSerializer):
             'run_time',
             'synopsis',
             'image_set',
+            'comments',
+            'main_trailer',
+            'star_average',
         )
