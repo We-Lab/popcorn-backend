@@ -1,3 +1,4 @@
+from django.db.models import Count
 from django.http import Http404
 from rest_framework import generics
 from rest_framework import permissions
@@ -77,3 +78,12 @@ class CommentLikeView(generics.CreateAPIView):
         serializer.save(comment=comment, user=request.user)
         headers = self.get_success_headers(serializer.data)
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
+
+class TopCommentView(APIView):
+    # django Aggregation API 활용
+    # 참조: https://docs.djangoproject.com/en/1.10/topics/db/aggregation/
+    def get(self, request, *args, **kwargs):
+        top_comment = Comment.objects.annotate(num_likes=Count('like_users')).order_by('-num_likes')[:3]
+        serializer = CommentSerializer(top_comment, many=True)
+        return Response(serializer.data)

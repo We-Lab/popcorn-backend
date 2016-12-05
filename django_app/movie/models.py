@@ -83,11 +83,8 @@ class Movie(models.Model):
         except:
             return '평점을 남겨주세요'
 
-
     def __str__(self):
         return self.title_kor
-
-
 
 
 class MovieImages(models.Model):
