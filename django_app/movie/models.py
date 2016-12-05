@@ -147,6 +147,7 @@ class FamousLike(BaseModel):
 
 
 class BoxOfficeMovie(BaseModel):
+    rank = models.IntegerField(default=0)
     movie = models.ForeignKey(Movie)
     release_date = models.DateField()
     ticketing_rate = models.FloatField(max_length=10)
