@@ -1,13 +1,15 @@
 from django.http import Http404
+from rest_framework import generics
+
 from rest_framework import permissions
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from member.models import MyUser
-from movie.models import Comment, Movie
+from movie.models import Comment, Movie, CommentLike
 from movie.permissions import IsOwnerOrReadOnly
-from movie.serializers.comment import CommentSerializer
+from movie.serializers.comment import CommentSerializer, CommentLikeSerializer
 
 
 class CommentAPIView(APIView):
@@ -59,3 +61,22 @@ class CommentDetailAPIView(APIView):
         comment = self.get_object(movie_id=kwargs.get('movie_id'), pk=kwargs.get('pk'))
         comment.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class CommentLikeView(generics.CreateAPIView):
+    serializer_class = CommentLikeSerializer
+    queryset = CommentLike.objects.all()
+    permission_classes = (permissions.IsAuthenticated, )
+
+    # post 요청시 좋아요 생성 또는 삭제
+    def create(self, request, *args, **kwargs):
+        comment = Comment.objects.get(pk=kwargs['comment_id'])
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        comment_like_exist = CommentLike.objects.filter(user=request.user, comment=comment)
+        if comment_like_exist.exists():
+            comment_like_exist.delete()
+            return Response(serializer.errors, status=status.HTTP_306_RESERVED)
+        serializer.save(comment=comment, user=request.user)
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
