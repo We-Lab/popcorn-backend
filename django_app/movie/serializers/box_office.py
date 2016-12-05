@@ -10,6 +10,7 @@ class BoxOfficeMovieSerializer(serializers.ModelSerializer):
         fields = (
             'title_kor',
             'img_url',
+            'star_average',
         )
 
 

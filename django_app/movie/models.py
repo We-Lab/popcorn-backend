@@ -67,6 +67,7 @@ class Movie(models.Model):
     created_year = models.IntegerField()
     img_url = models.TextField()
     main_trailer = models.TextField()
+    videos = models.TextField()
     run_time = models.CharField(max_length=30)
     synopsis = models.TextField()
     # 옵션정보
