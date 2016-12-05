@@ -29,6 +29,8 @@ class CommentSerializer(serializers.ModelSerializer):
             'author',
             'star',
             'content',
+            'likes_count',
+            'like_users',
             'created_date',
         )
 
