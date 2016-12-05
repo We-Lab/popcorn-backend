@@ -138,7 +138,7 @@ class FamousLine(BaseModel):
 
     @property
     def likes_count(self):
-        return self.famouslike_set.coount()
+        return self.famouslike_set.count()
 
 
 class FamousLike(BaseModel):
