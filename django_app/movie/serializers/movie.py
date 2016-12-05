@@ -1,7 +1,10 @@
 from rest_framework import serializers
 from member.models import MyUser
-from movie.models import Movie, MovieImages, Actor, Director, Comment
+from movie.models import Movie, MovieImages, Actor, Director, Comment, FamousLine
 
+
+# from movie.serializers.famous_line import FamousLineSerializer
+#
 
 class MovieTitleSerializer(serializers.ModelSerializer):
 
@@ -29,6 +32,8 @@ class CommentSerializer(serializers.ModelSerializer):
             'author',
             'star',
             'content',
+            'likes_count',
+            'like_users',
             'created_date',
         )
 
@@ -70,6 +75,26 @@ class ActorDetailSerializer(serializers.ModelSerializer):
             'name_kor',
             'name_eng',
             'profile_url',
+        )
+
+
+class FamousLineSerializer(serializers.ModelSerializer):
+    movie = MovieTitleSerializer(read_only=True)
+    author = UsernameSerializer(read_only=True)
+    actor = ActorSerializer(read_only=True)
+    # like_users = UsernameSerializer(read_only=True, many=True)
+
+    class Meta:
+        model = FamousLine
+        fields = (
+            'id',
+            'movie',
+            'actor',
+            'author',
+            'content',
+            'likes_count',
+            'like_users',
+            'created_date',
         )
 
 
@@ -118,6 +143,7 @@ class MovieDetailSerializer(serializers.ModelSerializer):
     director = DirectorDetailSerializer(many=True, read_only=True)
     actors = ActorDetailSerializer(many=True, read_only=True)
     comments = CommentSerializer(many=True, read_only=True, source='comment_set')
+    famous_lines = FamousLineSerializer(many=True, read_only=True, source='famousline_set')
     genre = serializers.SlugRelatedField(
         many=True,
         read_only=True,
@@ -145,6 +171,7 @@ class MovieDetailSerializer(serializers.ModelSerializer):
             'synopsis',
             'image_set',
             'comments',
+            'famous_lines',
             'main_trailer',
             'star_average',
         )
