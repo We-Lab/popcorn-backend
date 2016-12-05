@@ -1,12 +1,14 @@
 from django.http import Http404
+from rest_framework import generics
+from rest_framework import permissions
 from rest_framework import status
 from rest_framework.exceptions import NotAcceptable
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from movie.models import FamousLine, Movie, Actor
+from movie.models import FamousLine, Movie, Actor, FamousLike
 from movie.permissions import IsOwnerOrReadOnly
-from movie.serializers.famous_line import FamousLineSerializer
+from movie.serializers.famous_line import FamousLineSerializer, FamousLikeSerializer
 
 
 class FamousLineAPIView(APIView):
@@ -21,10 +23,9 @@ class FamousLineAPIView(APIView):
         a2 = Actor.objects.get(pk=request.data['actor'])
         if a2 not in [i for i in a1]:
             raise NotAcceptable('해당 배우를 찾을 수 없습니다')
-        author = request.user
         serializer = FamousLineSerializer(data=request.data)
         if serializer.is_valid():
-            serializer.save(movie=movie, author=author)
+            serializer.save(movie=movie, author=request.user, actor=a2)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -58,3 +59,22 @@ class FamousLineDetailAPIView(APIView):
         famous_line = self.get_object(movie_id=kwargs.get('movie_id'), pk=kwargs.get('pk'))
         famous_line.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class FamousLikeView(generics.CreateAPIView):
+    serializer_class = FamousLikeSerializer
+    queryset = FamousLike.objects.all()
+    permission_classes = (permissions.IsAuthenticated, )
+
+    # post 요청시 좋아요 생성 또는 삭제
+    def create(self, request, *args, **kwargs):
+        famous_line = FamousLine.objects.get(pk=kwargs['famous_id'])
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        famous_like_exist = FamousLike.objects.filter(user=request.user, famous_line=famous_line)
+        if famous_like_exist.exists():
+            famous_like_exist.delete()
+            return Response(serializer.errors, status=status.HTTP_306_RESERVED)
+        serializer.save(famous_line=famous_line, user=request.user)
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
