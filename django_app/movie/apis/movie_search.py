@@ -49,8 +49,15 @@ class MovieSearch(APIView):
             raise NotAcceptable('keyword is required')
 
 
+class MovieList(APIView):
+    def get(self, request):
+        movie = Movie.objects.all()
+        serializer = MovieDetailSerializer(movie, many=True)
+        return Response(serializer.data)
+
+
 class MovieDetail(APIView):
     def get(self, request, pk):
         movie = Movie.objects.filter(pk=pk)
         serializer = MovieDetailSerializer(movie, many=True)
-        return Response(serializer.data)
+        return Response(serializer.data[0])

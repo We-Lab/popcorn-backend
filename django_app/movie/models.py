@@ -83,7 +83,7 @@ class Movie(models.Model):
             average = sum(movie_star) / len(movie_star)
             return average
         except:
-            return '평점을 남겨주세요'
+            return float()
 
     def __str__(self):
         return self.title_kor
@@ -174,8 +174,8 @@ class BoxOfficeMovie(BaseModel):
 
 
 class Magazine(BaseModel):
-    movie = models.ForeignKey(Movie)
+    #duam_id
+    mag_id = models.IntegerField(unique=True)
     title = models.CharField(max_length=300)
     content = models.TextField()
-    author = models.CharField(max_length=30)
-    magazine_created_date = models.DateField()
+    img_url = models.TextField()
