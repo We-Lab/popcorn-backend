@@ -172,6 +172,10 @@ class BoxOfficeMovie(BaseModel):
     release_date = models.DateField()
     ticketing_rate = models.FloatField(max_length=10)
 
+    @property
+    def movie_title(self):
+        return Movie.objects.get(id=self.movie.pk).title_kor
+
 
 class Magazine(BaseModel):
     movie = models.ForeignKey(Movie)
