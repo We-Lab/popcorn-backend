@@ -105,9 +105,22 @@ class MovieActor(models.Model):
 
 
 class Comment(BaseModel):
+    STAR_CHOICES = (
+        (0.0, 0),
+        (0.5, 0.5),
+        (1.0, 1),
+        (1.5, 1.5),
+        (2.0, 2),
+        (2.5, 2.5),
+        (3.0, 3),
+        (3.5, 3.5),
+        (4.0, 4),
+        (4.5, 4.5),
+        (5.0, 5),
+    )
     author = models.ForeignKey(settings.AUTH_USER_MODEL)
     movie = models.ForeignKey(Movie)
-    star = models.IntegerField(validators=[MaxValueValidator(10), MinValueValidator(1)])
+    star = models.FloatField(choices=STAR_CHOICES)
     content = models.CharField(max_length=100, blank=True)
     like_users = models.ManyToManyField(settings.AUTH_USER_MODEL, through='CommentLike', related_name='comment_set_like_users')
 
