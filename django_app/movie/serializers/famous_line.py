@@ -1,30 +1,32 @@
 from rest_framework import serializers
 
 from movie.models import FamousLine, FamousLike
-from movie.serializers.comment import UsernameSerializer, MovieTitleSerializer
 
 
 class FamousLineSerializer(serializers.ModelSerializer):
-    movie = MovieTitleSerializer(read_only=True)
-    author = UsernameSerializer(read_only=True)
-    # like_users = UsernameSerializer(read_only=True, many=True)
+    author = serializers.StringRelatedField(read_only=True)
+    # movie = serializers.StringRelatedField()
 
     class Meta:
         model = FamousLine
         fields = (
             'id',
             'movie',
+            'movie_title',
             'actor',
+            'actor_kor_name',
+            'actor_character_name',
             'author',
             'content',
             'likes_count',
             'like_users',
             'created_date',
         )
+        read_only_fields = ('movie',)
 
 
 class FamousLikeSerializer(serializers.ModelSerializer):
-    user = UsernameSerializer(read_only=True)
+    user = serializers.StringRelatedField(read_only=True)
 
     class Meta:
         model = FamousLike

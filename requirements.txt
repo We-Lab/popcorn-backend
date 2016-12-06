@@ -9,6 +9,7 @@ colorama==0.3.7
 defusedxml==0.4.1
 Django==1.10.3
 django-allauth==0.29.0
+django-crontab==0.7.1
 django-rest-auth==0.8.2
 django-storages==1.5.1
 djangorestframework==3.5.3

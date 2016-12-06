@@ -1,4 +1,5 @@
 from django.db import models
+
 from mysite import settings
 from mysite.utils.models import BaseModel
 from django.core.validators import MaxValueValidator, MinValueValidator
@@ -82,7 +83,7 @@ class Movie(models.Model):
             average = sum(movie_star) / len(movie_star)
             return average
         except:
-            return '평점을 남겨주세요'
+            return float()
 
     def __str__(self):
         return self.title_kor
@@ -98,6 +99,9 @@ class MovieActor(models.Model):
     actor = models.ForeignKey(Actor)
     # actor_role = models.ForeignKey(ActorRole)
     character_name = models.CharField(max_length=30)
+
+    def __str__(self):
+        return self.character_name
 
 
 class Comment(BaseModel):
@@ -116,6 +120,10 @@ class Comment(BaseModel):
     @property
     def likes_count(self):
         return self.commentlike_set.count()
+
+    @property
+    def movie_title(self):
+        return Movie.objects.get(id=self.movie.pk).title_kor
 
 
 class CommentLike(BaseModel):
@@ -138,7 +146,19 @@ class FamousLine(BaseModel):
 
     @property
     def likes_count(self):
-        return self.famouslike_set.coount()
+        return self.famouslike_set.count()
+
+    @property
+    def movie_title(self):
+        return Movie.objects.get(id=self.movie.pk).title_kor
+
+    @property
+    def actor_kor_name(self):
+        return Actor.objects.get(id=self.actor.pk).name_kor
+
+    @property
+    def actor_character_name(self):
+        return MovieActor.objects.get(movie=self.movie, actor=self.actor).character_name
 
 
 class FamousLike(BaseModel):
@@ -147,14 +167,19 @@ class FamousLike(BaseModel):
 
 
 class BoxOfficeMovie(BaseModel):
+    rank = models.IntegerField(default=0)
     movie = models.ForeignKey(Movie)
     release_date = models.DateField()
     ticketing_rate = models.FloatField(max_length=10)
 
+    @property
+    def movie_title(self):
+        return Movie.objects.get(id=self.movie.pk).title_kor
+
 
 class Magazine(BaseModel):
-    movie = models.ForeignKey(Movie)
+    #duam_id
+    mag_id = models.IntegerField(unique=True)
     title = models.CharField(max_length=300)
     content = models.TextField()
-    author = models.CharField(max_length=30)
-    magazine_created_date = models.DateField()
+    img_url = models.TextField()

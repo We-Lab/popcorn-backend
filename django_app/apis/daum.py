@@ -151,20 +151,6 @@ def movie_search(keyword):
                 pass
 
 
-            video_list = []
-            count = 0
-            while True:
-                try:
-                    videos = movie_search.get("channel").get("item")[int(num)].get("video")[count].get("link")
-                    video = video_search(videos)
-                    # video_list.append(video)
-                    specific_movie.movies = video
-                    specific_movie.save()
-                    count += 1
-                except:
-                    break
-
-
             for genres in genre_list:
                 genre = Genre.objects.get_or_create(
                     genre=genres,

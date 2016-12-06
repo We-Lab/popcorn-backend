@@ -13,7 +13,7 @@ def box_office_search():
     movie_key_elements = bs.select("ul.list_boxthumb li a.link_boxthumb")
     box_office_elements = bs.select("ul.list_boxthumb div.desc_boxthumb dl.list_state")
 
-    for i in range(len(movie_title_list)):
+    for i in range(len(movie_title_list)-10):
         # 파싱한 영화 제목으로 영화 DB에 저장
         movie_title = movie_title_list[i].text
         print(movie_title)
@@ -46,6 +46,7 @@ def box_office_search():
         # BoxOfficeMovie instance 생성
         try:
             BoxOfficeMovie.objects.create(
+                rank=i+1,
                 movie=movie,
                 release_date=release_date,
                 ticketing_rate=ticketing_rate,

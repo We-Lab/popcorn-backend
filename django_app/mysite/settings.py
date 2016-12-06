@@ -58,7 +58,9 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.BasicAuthentication',
         'rest_framework.authentication.TokenAuthentication',
         # 'rest_framework.authentication.SessionAuthentication',
-    )
+    ),
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
+    'PAGE_SIZE': 5
 }
 
 REST_AUTH_REGISTER_SERIALIZERS = {
@@ -67,6 +69,7 @@ REST_AUTH_REGISTER_SERIALIZERS = {
 REST_AUTH_SERIALIZERS = {
     'USER_DETAILS_SERIALIZER': 'member.serializers.UserSerializer',
 }
+
 # # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.10/howto/deployment/checklist/
 
@@ -100,6 +103,8 @@ INSTALLED_APPS = [
     'allauth.account',
     'rest_auth.registration',
     'storages',
+    # contrab
+    'django_crontab',
 
     'member',
     'movie',
@@ -199,3 +204,10 @@ else:
     MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
     STATIC_URL = '/static/'
     MEDIA_URL = '/media/'
+
+
+# crontab
+CRONJOBS = [
+    ('0 0 * * *', 'apis.box_office_search.box_office_search'),
+    ('30 1 * * *', 'apis.magazine_search.magazine_search'),
+]

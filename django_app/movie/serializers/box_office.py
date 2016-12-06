@@ -1,28 +1,18 @@
 from rest_framework import serializers
 
-from movie.models import Movie, BoxOfficeMovie
+from movie.models import BoxOfficeMovie
+from movie.serializers.movie import MovieSerializer
 
 
-class BoxOfficeMovieSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = Movie
-        fields = (
-            'title_kor',
-            'img_url',
-            'star_average',
-        )
-
-
-class BoxOfficeSerialize(serializers.ModelSerializer):
-    movie = BoxOfficeMovieSerializer(read_only=True)
+class BoxOfficeSerializer(serializers.ModelSerializer):
+    movie = MovieSerializer(read_only=True)
 
     class Meta:
         model = BoxOfficeMovie
         fields = (
+            'rank',
             'movie',
+            'movie_title',
             'release_date',
             'ticketing_rate',
         )
-
-

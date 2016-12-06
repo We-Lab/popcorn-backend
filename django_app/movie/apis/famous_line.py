@@ -6,6 +6,7 @@ from rest_framework import status
 from rest_framework.exceptions import NotAcceptable
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework.settings import api_settings
 
 from movie.models import FamousLine, Movie, Actor, FamousLike
 from movie.permissions import IsOwnerOrReadOnly
@@ -14,18 +15,59 @@ from movie.serializers.famous_line import FamousLineSerializer, FamousLikeSerial
 
 class FamousLineAPIView(APIView):
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+    pagination_class = api_settings.DEFAULT_PAGINATION_CLASS
 
     def get(self, request, *args, **kwargs):
         famous_line = FamousLine.objects.filter(movie=kwargs.get('movie_id')).order_by('-created_date')
+        page = self.paginate_queryset(famous_line)
+        if page is not None:
+            serializer = FamousLineSerializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
         serializer = FamousLineSerializer(famous_line, many=True)
         return Response(serializer.data)
+
+    ######################################################################
+    # refer to mixins.ListModelMixin and generics.GenericAPIView
+    ######################################################################
+    @property
+    def paginator(self):
+        """
+        The paginator instance associated with the view, or `None`.
+        """
+        if not hasattr(self, '_paginator'):
+            if self.pagination_class is None:
+                self._paginator = None
+            else:
+                self._paginator = self.pagination_class()
+        return self._paginator
+
+    def paginate_queryset(self, queryset):
+        """
+        Return a single page of results, or `None` if pagination is disabled.
+        """
+        if self.paginator is None:
+            return None
+        return self.paginator.paginate_queryset(queryset, self.request, view=self)
+
+    def get_paginated_response(self, data):
+        """
+        Return a paginated style `Response` object for the given output data.
+        """
+        assert self.paginator is not None
+        return self.paginator.get_paginated_response(data)
+
+    ######################################################################
+    # refer to mixins.ListModelMixin and generics.GenericAPIView
+    ######################################################################
 
     def post(self, request, *args, **kwargs):
         movie = Movie.objects.get(pk=kwargs.get('movie_id'))
         a1 = Actor.objects.filter(movie__pk=kwargs.get('movie_id'))
         a2 = Actor.objects.get(pk=request.data['actor'])
+        # print(movie)
         if a2 not in [i for i in a1]:
             raise NotAcceptable('해당 배우를 찾을 수 없습니다')
+        # print(movie)
         serializer = FamousLineSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save(movie=movie, author=request.user, actor=a2)
