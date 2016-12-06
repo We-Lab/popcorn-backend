@@ -7,7 +7,7 @@ from rest_framework.exceptions import NotAcceptable
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from movie.models import FamousLine, Movie, Actor, FamousLike
+from movie.models import FamousLine, Movie, Actor, FamousLike, MovieActor
 from movie.permissions import IsOwnerOrReadOnly
 from movie.serializers.famous_line import FamousLineSerializer, FamousLikeSerializer
 

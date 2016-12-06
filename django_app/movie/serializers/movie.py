@@ -15,29 +15,16 @@ class MovieIdTitleSerializer(serializers.ModelSerializer):
         )
 
 
-class MovieTitleSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = Movie
-        fields = ('title_kor', )
-
-
-class UsernameSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = MyUser
-        fields = ('username', )
-
-
 class CommentSerializer(serializers.ModelSerializer):
-    movie = MovieTitleSerializer(read_only=True)
-    author = UsernameSerializer(read_only=True)
+    author = serializers.StringRelatedField(read_only=True)
 
+    # like_users 필드로 사용자의 좋아요 선택여부 판단 가능
     class Meta:
         model = Comment
         fields = (
             'id',
             'movie',
+            'movie_title',
             'author',
             'star',
             'content',
@@ -88,17 +75,17 @@ class ActorDetailSerializer(serializers.ModelSerializer):
 
 
 class FamousLineSerializer(serializers.ModelSerializer):
-    movie = MovieTitleSerializer(read_only=True)
-    author = UsernameSerializer(read_only=True)
-    actor = ActorSerializer(read_only=True)
-    # like_users = UsernameSerializer(read_only=True, many=True)
+    author = serializers.StringRelatedField(read_only=True)
 
     class Meta:
         model = FamousLine
         fields = (
             'id',
             'movie',
+            'movie_title',
             'actor',
+            'actor_kor_name',
+            'actor_character_name',
             'author',
             'content',
             'likes_count',

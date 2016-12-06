@@ -1,4 +1,5 @@
 from django.db import models
+
 from mysite import settings
 from mysite.utils.models import BaseModel
 from django.core.validators import MaxValueValidator, MinValueValidator
@@ -99,6 +100,9 @@ class MovieActor(models.Model):
     # actor_role = models.ForeignKey(ActorRole)
     character_name = models.CharField(max_length=30)
 
+    def __str__(self):
+        return self.character_name
+
 
 class Comment(BaseModel):
     author = models.ForeignKey(settings.AUTH_USER_MODEL)
@@ -116,6 +120,10 @@ class Comment(BaseModel):
     @property
     def likes_count(self):
         return self.commentlike_set.count()
+
+    @property
+    def movie_title(self):
+        return Movie.objects.get(id=self.movie.pk).title_kor
 
 
 class CommentLike(BaseModel):
@@ -139,6 +147,18 @@ class FamousLine(BaseModel):
     @property
     def likes_count(self):
         return self.famouslike_set.count()
+
+    @property
+    def movie_title(self):
+        return Movie.objects.get(id=self.movie.pk).title_kor
+
+    @property
+    def actor_kor_name(self):
+        return Actor.objects.get(id=self.actor.pk).name_kor
+
+    @property
+    def actor_character_name(self):
+        return MovieActor.objects.get(movie=self.movie, actor=self.actor).character_name
 
 
 class FamousLike(BaseModel):
