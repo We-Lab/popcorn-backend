@@ -1,14 +1,16 @@
 from django.conf.urls import url
 
 from movie.apis.box_office import BoxOfficeAPIView
-from movie.apis.comment import CommentAPIView, CommentDetailAPIView, CommentLikeView, TopCommentView
+from movie.apis.comment import CommentAPIView, CommentDetailAPIView, CommentLikeView, TopCommentView, NewCommentAPIView
 from movie.apis.famous_line import FamousLineAPIView, FamousLineDetailAPIView, FamousLikeView, TopFamousView
+from movie.apis.magazine import MagazineList
 from movie.apis.movie_search import MovieSearch, MovieDetail
 
 
 urlpatterns = [
     # 메인페이지
     url(r'^main/box_office/', BoxOfficeAPIView.as_view(), name='box_office'),
+    url(r'^main/comments/', NewCommentAPIView.as_view(), name='new_comments'),
     # 검색페이지
     url(r'^search/$', MovieSearch.as_view(), name='movie_search'),
     # 영화상세
@@ -23,4 +25,6 @@ urlpatterns = [
     url(r'^(?P<movie_id>[0-9]+)/famous/top/$', TopFamousView.as_view(), name='famous_top'),
     url(r'^famous/(?P<famous_id>[0-9]+)/$', FamousLineDetailAPIView.as_view(), name='famous_line_detail'),
     url(r'^famous/(?P<famous_id>[0-9]+)/famous_like/', FamousLikeView.as_view(), name='famous_like'),
+    # 매거진 리스트
+    url(r'^magazine/', MagazineList.as_view(), name='magazine_list'),
 ]

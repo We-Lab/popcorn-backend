@@ -20,13 +20,11 @@ def magazine_search():
             print(mag_id)
             if Magazine.objects.filter(mag_id=mag_id).exists():
                 pass
-                print('pass')
             else:
                 text = []
                 mag = requests.get(link)
                 bs_mag = BeautifulSoup(mag.text, 'html.parser')
                 mag_title = bs_mag.select('h3.tit_view')[0].text
-                print('add')
                 body = bs_mag.select('div.section_view.section_editor p')
                 for count in range(len(body)):
                     body = bs_mag.select('div.section_view.section_editor p')[count].text
@@ -35,7 +33,7 @@ def magazine_search():
                     mag_id=mag_id,
                     img_url=img_url[0],
                     title=mag_title,
-                    content=text[0],
+                    content=text,
                 )
         except:
             pass

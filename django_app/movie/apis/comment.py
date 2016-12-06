@@ -21,7 +21,7 @@ class CommentAPIView(APIView):
         comments = Comment.objects.filter(movie=kwargs.get('movie_id')).order_by('-created_date')
         page = self.paginate_queryset(comments)
         if page is not None:
-            serializer = CommentSerializer(comments, many=True)
+            serializer = CommentSerializer(page, many=True)
             return self.get_paginated_response(serializer.data)
         serializer = CommentSerializer(comments, many=True)
         return Response(serializer.data)
@@ -127,3 +127,11 @@ class TopCommentView(APIView):
         top_comment = Comment.objects.annotate(num_likes=Count('like_users')).order_by('-num_likes')[:3]
         serializer = CommentSerializer(top_comment, many=True)
         return Response(serializer.data)
+
+
+class NewCommentAPIView(APIView):
+    def get(self, request, *args, **kwargs):
+        comment = Comment.objects.all().order_by('-created_date')[:10]
+        serializer = CommentSerializer(comment, many=True)
+        return Response(serializer.data)
+
