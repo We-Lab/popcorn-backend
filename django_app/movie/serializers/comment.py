@@ -20,6 +20,7 @@ class CommentSerializer(serializers.ModelSerializer):
             'like_users',
             'created_date',
         )
+        read_only_fields = ('movie',)
 
 
 class CommentLikeSerializer(serializers.ModelSerializer):
