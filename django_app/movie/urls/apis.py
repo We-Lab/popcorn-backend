@@ -3,6 +3,7 @@ from django.conf.urls import url
 from movie.apis.box_office import BoxOfficeAPIView
 from movie.apis.comment import CommentAPIView, CommentDetailAPIView, CommentLikeView, TopCommentView
 from movie.apis.famous_line import FamousLineAPIView, FamousLineDetailAPIView, FamousLikeView, TopFamousView
+from movie.apis.magazine import MagazineList
 from movie.apis.movie_search import MovieSearch, MovieDetail
 
 
@@ -23,4 +24,6 @@ urlpatterns = [
     url(r'^(?P<movie_id>[0-9]+)/famous/top/$', TopFamousView.as_view(), name='famous_top'),
     url(r'^famous/(?P<famous_id>[0-9]+)/$', FamousLineDetailAPIView.as_view(), name='famous_line_detail'),
     url(r'^famous/(?P<famous_id>[0-9]+)/famous_like/', FamousLikeView.as_view(), name='famous_like'),
+    # 매거진 리스트
+    url(r'^magazine/', MagazineList.as_view(), name='magazine_list'),
 ]
