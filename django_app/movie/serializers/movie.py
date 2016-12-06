@@ -6,34 +6,6 @@ from movie.models import Movie, MovieImages, Actor, Director, Comment, FamousLin
 # from movie.serializers.famous_line import FamousLineSerializer
 
 
-class MovieIdTitleSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Movie
-        fields = (
-            'id',
-            'title_kor',
-        )
-
-
-class CommentSerializer(serializers.ModelSerializer):
-    author = serializers.StringRelatedField(read_only=True)
-
-    # like_users 필드로 사용자의 좋아요 선택여부 판단 가능
-    class Meta:
-        model = Comment
-        fields = (
-            'id',
-            'movie',
-            'movie_title',
-            'author',
-            'star',
-            'content',
-            'likes_count',
-            'like_users',
-            'created_date',
-        )
-
-
 class DirectorSerializer(serializers.ModelSerializer):
     class Meta:
         model = Director
@@ -71,26 +43,6 @@ class ActorDetailSerializer(serializers.ModelSerializer):
             'name_kor',
             'name_eng',
             'profile_url',
-        )
-
-
-class FamousLineSerializer(serializers.ModelSerializer):
-    author = serializers.StringRelatedField(read_only=True)
-
-    class Meta:
-        model = FamousLine
-        fields = (
-            'id',
-            'movie',
-            'movie_title',
-            'actor',
-            'actor_kor_name',
-            'actor_character_name',
-            'author',
-            'content',
-            'likes_count',
-            'like_users',
-            'created_date',
         )
 
 
@@ -138,8 +90,6 @@ class MovieDetailSerializer(serializers.ModelSerializer):
     image_set = MovieImageSerializer(many=True, read_only=True, source='movieimages_set')
     director = DirectorDetailSerializer(many=True, read_only=True)
     actors = ActorDetailSerializer(many=True, read_only=True)
-    comments = CommentSerializer(many=True, read_only=True, source='comment_set')
-    famous_lines = FamousLineSerializer(many=True, read_only=True, source='famousline_set')
     genre = serializers.SlugRelatedField(
         many=True,
         read_only=True,
@@ -166,8 +116,6 @@ class MovieDetailSerializer(serializers.ModelSerializer):
             'run_time',
             'synopsis',
             'image_set',
-            'comments',
-            'famous_lines',
             'main_trailer',
             'star_average',
         )
