@@ -1,9 +1,11 @@
 from rest_framework import serializers
 
 from movie.models import BoxOfficeMovie
+from movie.serializers.movie import MovieSerializer
 
 
-class BoxOfficeListSerializer(serializers.ModelSerializer):
+class BoxOfficeSerializer(serializers.ModelSerializer):
+    movie = MovieSerializer(read_only=True)
 
     class Meta:
         model = BoxOfficeMovie

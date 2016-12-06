@@ -24,8 +24,10 @@ class FamousLineAPIView(APIView):
         movie = Movie.objects.get(pk=kwargs.get('movie_id'))
         a1 = Actor.objects.filter(movie__pk=kwargs.get('movie_id'))
         a2 = Actor.objects.get(pk=request.data['actor'])
+        # print(movie)
         if a2 not in [i for i in a1]:
             raise NotAcceptable('해당 배우를 찾을 수 없습니다')
+        # print(movie)
         serializer = FamousLineSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save(movie=movie, author=request.user, actor=a2)
