@@ -19,6 +19,7 @@ from django.contrib import admin
 from movie.apis.box_office import BoxOfficeAPIView
 from movie.apis.comment import NewCommentAPIView
 from movie.apis.magazine import SampleMagazineAPIView
+from movie.apis.movie_recommend import CarouselMovieRecommend
 
 urlpatterns = [
     # 어드민페이지
@@ -28,6 +29,7 @@ urlpatterns = [
     url(r'^main/box_office/$', BoxOfficeAPIView.as_view(), name='box_office'),
     url(r'^main/comments/$', NewCommentAPIView.as_view(), name='new_comments'),
     url(r'^main/magazines/$', SampleMagazineAPIView.as_view(), name='magazine_samples'),
+    url(r'^main/Top_movie_recommend/$', CarouselMovieRecommend().as_view(), name='top_movie_recommend'),
     # 회원페이지
     url(r'^member/', include('member.urls', namespace='member')),
     # 테스트페이지
