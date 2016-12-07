@@ -16,16 +16,22 @@ Including another URLconf
 from django.conf.urls import url, include
 from django.contrib import admin
 
-apis_patterns = [
-    url(r'^movie/', include('movie.urls.apis', namespace='movie')),
-]
-
+from movie.apis.box_office import BoxOfficeAPIView
+from movie.apis.comment import NewCommentAPIView
+from movie.apis.magazine import SampleMagazineAPIView
 
 urlpatterns = [
+    # 어드민페이지
     url(r'^admin/', admin.site.urls),
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
-    url(r'^rest-auth/', include('rest_auth.urls')),
-    url(r'^rest-auth/registration/', include('rest_auth.registration.urls')),
+    # 메인페이지
+    url(r'^main/box_office/$', BoxOfficeAPIView.as_view(), name='box_office'),
+    url(r'^main/comments/$', NewCommentAPIView.as_view(), name='new_comments'),
+    url(r'^main/magazines/$', SampleMagazineAPIView.as_view(), name='magazine_samples'),
+    # 회원페이지
+    url(r'^member/', include('member.urls', namespace='member')),
+    # 테스트페이지
     url(r'^test-api/', include('test_app.urls', namespace='test')),
-    url(r'', include(apis_patterns)),
+    # 영화페이지
+    url(r'^movie/', include('movie.urls.apis', namespace='movie')),
 ]
