@@ -3,7 +3,7 @@ from django.conf.urls import url
 from movie.apis.box_office import BoxOfficeAPIView
 from movie.apis.comment import CommentAPIView, CommentDetailAPIView, CommentLikeView, TopCommentView, NewCommentAPIView
 from movie.apis.famous_line import FamousLineAPIView, FamousLineDetailAPIView, FamousLikeView, TopFamousView
-from movie.apis.magazine import MagazineList
+from movie.apis.magazine import MagazineList, SampleMagazineAPIView
 from movie.apis.movie_search import MovieSearch, MovieDetail
 
 
@@ -11,6 +11,7 @@ urlpatterns = [
     # 메인페이지
     url(r'^main/box_office/', BoxOfficeAPIView.as_view(), name='box_office'),
     url(r'^main/comments/', NewCommentAPIView.as_view(), name='new_comments'),
+    url(r'^main/magazines/', SampleMagazineAPIView.as_view(), name='magazine_samples'),
     # 검색페이지
     url(r'^search/$', MovieSearch.as_view(), name='movie_search'),
     # 영화상세
