@@ -83,6 +83,9 @@ class MovieSerializer(serializers.ModelSerializer):
             'created_year',
             'img_url',
             'run_time',
+            'star_sum',
+            'comment_count',
+            'star_average',
         )
 
 
@@ -117,5 +120,7 @@ class MovieDetailSerializer(serializers.ModelSerializer):
             'synopsis',
             'image_set',
             'main_trailer',
+            'star_sum',
+            'comment_count',
             'star_average',
         )
