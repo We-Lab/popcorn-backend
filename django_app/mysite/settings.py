@@ -204,10 +204,3 @@ else:
     MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
     STATIC_URL = '/static/'
     MEDIA_URL = '/media/'
-
-
-# crontab
-CRONJOBS = [
-    ('0 0 * * *', 'apis.box_office_search.box_office_search'),
-    ('30 1 * * *', 'apis.magazine_search.magazine_search'),
-]

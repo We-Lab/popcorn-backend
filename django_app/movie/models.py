@@ -62,6 +62,10 @@ class Movie(models.Model):
     genre = models.ManyToManyField(Genre)
     actors = models.ManyToManyField(Actor, through='MovieActor')
     director = models.ManyToManyField(Director)
+    # 평가내용
+    star_sum = models.FloatField(default=0.0)
+    comment_count = models.IntegerField(default=0)
+    star_average = models.FloatField(default=0.0)
     # 기타정보
     making_country = models.ManyToManyField(MakingCountry)
     grade = models.ForeignKey(Grade)
@@ -74,16 +78,6 @@ class Movie(models.Model):
     # 옵션정보
     # accumulated_viewers = models.IntegerField(blank=True)
     Release_date = models.CharField(max_length=30, blank=True)
-
-
-    @property
-    def star_average(self):
-        try:
-            movie_star = [comment.star for comment in Comment.objects.filter(movie_id=self.pk)]
-            average = sum(movie_star) / len(movie_star)
-            return average
-        except:
-            return float()
 
     def __str__(self):
         return self.title_kor
@@ -196,3 +190,6 @@ class Magazine(BaseModel):
     title = models.CharField(max_length=300)
     content = models.TextField()
     img_url = models.TextField()
+
+    def __str__(self):
+        return self.title
