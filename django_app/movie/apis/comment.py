@@ -1,8 +1,10 @@
 from django.db.models import Count
 from django.http import Http404
+from rest_framework import filters
 from rest_framework import generics
 from rest_framework import permissions
 from rest_framework import status
+from rest_framework.pagination import CursorPagination
 from rest_framework.response import Response
 from rest_framework.settings import api_settings
 from rest_framework.views import APIView
@@ -16,10 +18,11 @@ from movie.serializers.comment import CommentSerializer, CommentLikeSerializer
 class CommentView(generics.ListCreateAPIView):
     serializer_class = CommentSerializer
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+    pagination_class = CursorPagination
 
     def get_queryset(self):
         movie_id = self.kwargs['movie_id']
-        return Comment.objects.filter(movie_id=movie_id).order_by('-created_date')
+        return Comment.objects.filter(movie_id=movie_id)
 
     def perform_create(self, serializer):
         movie = Movie.objects.get(id=self.kwargs['movie_id'])
@@ -95,6 +98,6 @@ class TopCommentView(APIView):
 
 class NewCommentAPIView(APIView):
     def get(self, request, *args, **kwargs):
-        comment = Comment.objects.all().order_by('-created_date')[:10]
+        comment = Comment.objects.all().order_by('-created')[:10]
         serializer = CommentSerializer(comment, many=True)
         return Response(serializer.data)

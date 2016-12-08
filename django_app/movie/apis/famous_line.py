@@ -18,7 +18,7 @@ class FamousLineAPIView(APIView):
     pagination_class = api_settings.DEFAULT_PAGINATION_CLASS
 
     def get(self, request, *args, **kwargs):
-        famous_line = FamousLine.objects.filter(movie=kwargs.get('movie_id')).order_by('-created_date')
+        famous_line = FamousLine.objects.filter(movie=kwargs.get('movie_id')).order_by('-created')
         page = self.paginate_queryset(famous_line)
         if page is not None:
             serializer = FamousLineSerializer(page, many=True)

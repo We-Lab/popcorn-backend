@@ -20,7 +20,7 @@ class FamousLineSerializer(serializers.ModelSerializer):
             'content',
             'likes_count',
             'like_users',
-            'created_date',
+            'created',
         )
         read_only_fields = ('movie',)
 

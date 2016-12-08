@@ -52,7 +52,7 @@ class Director(models.Model):
         return self.name_kor
 
 
-class Movie(models.Model):
+class Movie(BaseModel):
     # 다음 영화 id
     daum_id = models.IntegerField(unique=True)
     # 영화 제목
