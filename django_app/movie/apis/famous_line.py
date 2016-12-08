@@ -17,7 +17,7 @@ from movie.serializers.famous_line import FamousLineSerializer, FamousLikeSerial
 
 class FamousLiseView(generics.ListCreateAPIView):
     serializer_class = FamousLineSerializer
-    permission_classes = (permissions.IsAuthenticated,)
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
     pagination_class = CursorPagination
 
     def get_queryset(self):
@@ -61,7 +61,7 @@ class FamousLikeView(generics.CreateAPIView):
 
     # post 요청시 좋아요 생성 또는 삭제
     def create(self, request, *args, **kwargs):
-        famous_line = FamousLine.objects.get(pk=kwargs['famous_id'])
+        famous_line = FamousLine.objects.get(pk=kwargs['pk'])
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         famous_like_exist = FamousLike.objects.filter(user=request.user, famous_line=famous_line)
