@@ -12,8 +12,10 @@ class MovieSearch(APIView):
 
         title = movie_search(keyword)
 
-
-        hash_kor = title[0].split()[0]
+        try:
+            hash_kor = title[0].split()[0]
+        except:
+            hash_kor = ''
         try:
             hash_kor1 = title[0].split()[1]
         except:
@@ -29,7 +31,9 @@ class MovieSearch(APIView):
         except:
             hash_eng1 = ''
 
-        if Movie.objects.filter(title_kor__icontains=keyword).exists():
+        if len(title) == 0:
+            raise NotAcceptable('keyword is not valid')
+        elif Movie.objects.filter(title_kor__icontains=keyword).exists():
             movie = Movie.objects.filter(title_kor__icontains=keyword)
             serializer = MovieSerializer(movie, many=True)
             return Response(serializer.data)
@@ -45,8 +49,6 @@ class MovieSearch(APIView):
             movie = Movie.objects.filter(title_eng__icontains=hash_eng).filter(title_eng__icontains=hash_eng1)
             serializer = MovieSerializer(movie, many=True)
             return Response(serializer.data)
-        else:
-            raise NotAcceptable('keyword is required')
 
 
 class MovieList(APIView):
