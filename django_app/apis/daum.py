@@ -91,11 +91,11 @@ def movie_search(keyword):
     movie_search = r.json()
     title = []
     num_of_movies = movie_search.get("channel").get("totalCount")
-    title_eng = movie_search.get("channel").get("item")[0].get("eng_title")[0].get("content")
-    title_kor = movie_search.get("channel").get("item")[0].get("title")[0].get("content")
-    title.append(title_kor)
-    title.append(title_eng)
     for num in range(num_of_movies):
+        title_eng = movie_search.get("channel").get("item")[0].get("eng_title")[0].get("content")
+        title_kor = movie_search.get("channel").get("item")[0].get("title")[0].get("content")
+        title.append(title_kor)
+        title.append(title_eng)
         title_link = movie_search.get("channel").get("item")[int(num)].get("title")[0].get("link")
         daum_id = re.findall(r'\d+', title_link)
         if Movie.objects.filter(daum_id=daum_id[0]):
