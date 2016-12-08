@@ -19,7 +19,7 @@ class CommentView(generics.ListCreateAPIView):
 
     def get_queryset(self):
         movie_pk = self.kwargs['pk']
-        return Comment.objects.filter(movie_pk=movie_pk)
+        return Comment.objects.filter(movie=movie_pk)
 
     def perform_create(self, serializer):
         movie = Movie.objects.get(pk=self.kwargs['pk'])
