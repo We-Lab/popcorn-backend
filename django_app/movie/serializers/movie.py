@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from member.models import MyUser
-from movie.models import Movie, MovieImages, Actor, Director, Comment, FamousLine
+from movie.models import Movie, MovieImages, Actor, Director, Comment, FamousLine, Genre, Grade
 
 
 # from movie.serializers.famous_line import FamousLineSerializer
@@ -56,18 +56,28 @@ class MovieImageSerializer(serializers.ModelSerializer):
         )
 
 
+class GenreSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Genre
+        fields = (
+            'pk',
+            'genre',
+        )
+
+
+class GradeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Grade
+        fields = (
+            'pk',
+            'grade',
+        )
+
 class MovieSerializer(serializers.ModelSerializer):
     director = DirectorSerializer(many=True, read_only=True)
     actors = ActorSerializer(many=True, read_only=True)
-    genre = serializers.SlugRelatedField(
-        many=True,
-        read_only=True,
-        slug_field='genre'
-    )
-    grade = serializers.SlugRelatedField(
-        read_only=True,
-        slug_field='grade',
-    )
+    genre = GenreSerializer(many=True, read_only=True)
+    grade = GradeSerializer(read_only=True)
 
     class Meta:
         model = Movie
@@ -93,15 +103,8 @@ class MovieDetailSerializer(serializers.ModelSerializer):
     image_set = MovieImageSerializer(many=True, read_only=True, source='movieimages_set')
     director = DirectorDetailSerializer(many=True, read_only=True)
     actors = ActorDetailSerializer(many=True, read_only=True)
-    genre = serializers.SlugRelatedField(
-        many=True,
-        read_only=True,
-        slug_field='genre'
-    )
-    grade = serializers.SlugRelatedField(
-        read_only=True,
-        slug_field='grade',
-    )
+    genre = GenreSerializer(many=True, read_only=True)
+    grade = GradeSerializer(read_only=True)
     star_average = serializers.ReadOnlyField()
 
     class Meta:
