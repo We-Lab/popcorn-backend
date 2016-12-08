@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from member.models import MyUser
-from movie.models import Movie, MovieImages, Actor, Director, Comment, FamousLine, Genre, Grade
+from movie.models import Movie, MovieImages, Actor, Director, Comment, FamousLine, Genre, Grade, MakingCountry
 
 
 # from movie.serializers.famous_line import FamousLineSerializer
@@ -73,11 +73,21 @@ class GradeSerializer(serializers.ModelSerializer):
             'grade',
         )
 
+
+class MakingCountrySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = MakingCountry
+        fields = (
+            'pk',
+            'making_country',
+        )
+
 class MovieSerializer(serializers.ModelSerializer):
     director = DirectorSerializer(many=True, read_only=True)
     actors = ActorSerializer(many=True, read_only=True)
     genre = GenreSerializer(many=True, read_only=True)
     grade = GradeSerializer(read_only=True)
+    making_country = MakingCountrySerializer(many=True, read_only=True)
 
     class Meta:
         model = Movie
@@ -90,6 +100,7 @@ class MovieSerializer(serializers.ModelSerializer):
             'director',
             'actors',
             'grade',
+            'making_country',
             'created_year',
             'img_url',
             'run_time',
@@ -105,6 +116,7 @@ class MovieDetailSerializer(serializers.ModelSerializer):
     actors = ActorDetailSerializer(many=True, read_only=True)
     genre = GenreSerializer(many=True, read_only=True)
     grade = GradeSerializer(read_only=True)
+    making_country = MakingCountrySerializer(many=True, read_only=True)
     star_average = serializers.ReadOnlyField()
 
     class Meta:
@@ -117,6 +129,7 @@ class MovieDetailSerializer(serializers.ModelSerializer):
             'director',
             'actors',
             'grade',
+            'making_country',
             'created_year',
             'img_url',
             'run_time',
