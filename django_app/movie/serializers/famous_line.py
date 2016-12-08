@@ -6,7 +6,6 @@ from movie.models import FamousLine, FamousLike
 class FamousLineSerializer(serializers.ModelSerializer):
     author = serializers.StringRelatedField(read_only=True)
     # movie = serializers.StringRelatedField()
-
     class Meta:
         model = FamousLine
         fields = (
