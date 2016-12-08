@@ -60,7 +60,7 @@ REST_FRAMEWORK = {
         # 'rest_framework.authentication.SessionAuthentication',
     ),
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.CursorPagination',
-    'PAGE_SIZE': 2,
+    'PAGE_SIZE': 10,
 }
 
 REST_AUTH_REGISTER_SERIALIZERS = {

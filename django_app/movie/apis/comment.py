@@ -19,11 +19,6 @@ class CommentView(generics.ListCreateAPIView):
     serializer_class = CommentSerializer
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
     pagination_class = CursorPagination
-    # CursorPagination default ordering 이 '-created' 인데 '-created_date'로 바꿈
-    # 덕분에 get_queryset에서 ordery_by 삭제함
-    filter_backends = (filters.OrderingFilter,)
-    ordering_fields = ('-created_date',)
-    ordering = ('-created_date',)
 
     def get_queryset(self):
         movie_id = self.kwargs['movie_id']
@@ -103,6 +98,6 @@ class TopCommentView(APIView):
 
 class NewCommentAPIView(APIView):
     def get(self, request, *args, **kwargs):
-        comment = Comment.objects.all().order_by('-created_date')[:10]
+        comment = Comment.objects.all().order_by('-created')[:10]
         serializer = CommentSerializer(comment, many=True)
         return Response(serializer.data)
