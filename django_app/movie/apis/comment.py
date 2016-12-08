@@ -1,12 +1,9 @@
 from django.db.models import Count
-from django.http import Http404
-from rest_framework import filters
 from rest_framework import generics
 from rest_framework import permissions
 from rest_framework import status
 from rest_framework.pagination import CursorPagination
 from rest_framework.response import Response
-from rest_framework.settings import api_settings
 from rest_framework.views import APIView
 
 from member.models import MyUser
@@ -21,11 +18,11 @@ class CommentView(generics.ListCreateAPIView):
     pagination_class = CursorPagination
 
     def get_queryset(self):
-        movie_id = self.kwargs['movie_id']
-        return Comment.objects.filter(movie_id=movie_id)
+        movie_pk = self.kwargs['pk']
+        return Comment.objects.filter(movie_pk=movie_pk)
 
     def perform_create(self, serializer):
-        movie = Movie.objects.get(id=self.kwargs['movie_id'])
+        movie = Movie.objects.get(pk=self.kwargs['pk'])
         author = MyUser.objects.get(pk=self.request.user.pk)
         serializer.save(movie=movie, author=author)
         movie.comment_count += 1

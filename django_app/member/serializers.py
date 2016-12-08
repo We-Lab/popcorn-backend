@@ -55,4 +55,3 @@ class UserSerializer(serializers.ModelSerializer):
             'favorite_making_country',
         )
         read_only_fields = ('username', )
-
