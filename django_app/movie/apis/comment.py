@@ -1,8 +1,10 @@
 from django.db.models import Count
 from django.http import Http404
+from rest_framework import filters
 from rest_framework import generics
 from rest_framework import permissions
 from rest_framework import status
+from rest_framework.pagination import CursorPagination
 from rest_framework.response import Response
 from rest_framework.settings import api_settings
 from rest_framework.views import APIView
@@ -16,10 +18,16 @@ from movie.serializers.comment import CommentSerializer, CommentLikeSerializer
 class CommentView(generics.ListCreateAPIView):
     serializer_class = CommentSerializer
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+    pagination_class = CursorPagination
+    # CursorPagination default ordering 이 '-created' 인데 '-created_date'로 바꿈
+    # 덕분에 get_queryset에서 ordery_by 삭제함
+    filter_backends = (filters.OrderingFilter,)
+    ordering_fields = ('-created_date',)
+    ordering = ('-created_date',)
 
     def get_queryset(self):
         movie_id = self.kwargs['movie_id']
-        return Comment.objects.filter(movie_id=movie_id).order_by('-created_date')
+        return Comment.objects.filter(movie_id=movie_id)
 
     def perform_create(self, serializer):
         movie = Movie.objects.get(id=self.kwargs['movie_id'])
