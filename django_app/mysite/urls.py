@@ -15,7 +15,7 @@ Including another URLconf
 """
 from django.conf.urls import url, include
 from django.contrib import admin
-
+from allauth.account.views import confirm_email
 from movie.apis.box_office import BoxOfficeAPIView
 from movie.apis.comment import NewCommentAPIView
 from movie.apis.magazine import SampleMagazineAPIView
@@ -32,7 +32,10 @@ urlpatterns = [
     url(r'^main/movie_recommends/', MainMovieList.as_view(), name='movie_recommends'),
     url(r'^main/movie_recommends/carousel/$', CarouselMovieRecommend().as_view(), name='carousel_movie_recommends'),
     # 회원페이지
-    url(r'^member/', include('member.urls', namespace='member')),
+    url(r'^accounts/', include('allauth.urls')),
+    url(r'^member/', include('rest_auth.urls')),
+    url(r'^member/registration/', include('rest_auth.registration.urls')),
+    url(r'^account-confirm-email/(?P<key>[-:\w]+)/$', confirm_email, name='account_confirm_email'),
     # 테스트페이지
     url(r'^test-api/', include('test_app.urls', namespace='test')),
     # 영화페이지
