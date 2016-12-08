@@ -18,6 +18,7 @@ from django.contrib import admin
 from allauth.account.views import confirm_email
 from movie.apis.box_office import BoxOfficeAPIView
 from movie.apis.comment import NewCommentAPIView
+from movie.apis.favorites import GenreView, MakingCountryView, GradeView
 from movie.apis.magazine import SampleMagazineAPIView
 from movie.apis.movie_recommend import CarouselMovieRecommend, MainMovieList
 
@@ -31,6 +32,10 @@ urlpatterns = [
     url(r'^main/magazines/$', SampleMagazineAPIView.as_view(), name='magazine_samples'),
     url(r'^main/movie_recommends/', MainMovieList.as_view(), name='movie_recommends'),
     url(r'^main/movie_recommends/carousel/$', CarouselMovieRecommend().as_view(), name='carousel_movie_recommends'),
+    # 취향페이지
+    url(r'^favorite/genre/$', GenreView.as_view(), name='favorites'),
+    url(r'^favorite/grade/$', GradeView.as_view(), name='favorites'),
+    url(r'^favorite/making_country/$', MakingCountryView.as_view(), name='favorites'),
     # 회원페이지
     url(r'^accounts/', include('allauth.urls')),
     url(r'^member/', include('rest_auth.urls')),
