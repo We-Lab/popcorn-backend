@@ -1,5 +1,6 @@
 from django.db import models
 
+
 from mysite import settings
 from mysite.utils.models import BaseModel
 from django.core.validators import MaxValueValidator, MinValueValidator
@@ -78,9 +79,14 @@ class Movie(BaseModel):
     # 옵션정보
     # accumulated_viewers = models.IntegerField(blank=True)
     Release_date = models.CharField(max_length=30, blank=True)
+    like_users = models.ManyToManyField(settings.AUTH_USER_MODEL, through='MovieLike', related_name='movie_set_like_users')
 
     def __str__(self):
         return self.title_kor
+
+    @property
+    def likes_count(self):
+        return self.movielike_set.count()
 
 
 class MovieImages(models.Model):
@@ -140,6 +146,13 @@ class CommentLike(BaseModel):
     def __str__(self):
         return self.comment.__str__() + '|' + self.user.__str__()
 
+
+class MovieLike(BaseModel):
+    movie = models.ForeignKey(Movie)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL)
+
+    def __str__(self):
+        return self.movie.__str__() + '|' + self.user.__str__()
 
 class FamousLine(BaseModel):
     movie = models.ForeignKey(Movie)

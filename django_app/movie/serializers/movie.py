@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from member.models import MyUser
-from movie.models import Movie, MovieImages, Actor, Director, Comment, FamousLine, Genre, Grade, MakingCountry
+from movie.models import Movie, MovieImages, Actor, Director, Comment, FamousLine, Genre, Grade, MakingCountry, \
+    MovieLike
 
 
 # from movie.serializers.famous_line import FamousLineSerializer
@@ -139,4 +140,24 @@ class MovieDetailSerializer(serializers.ModelSerializer):
             'star_sum',
             'comment_count',
             'star_average',
+            'likes_count',
+            'like_users',
         )
+
+    def to_representation(self, instance):
+        ret = super().to_representation(instance)
+        ret['is_like'] = False
+        request = self.context.get('request')
+        if request is not None:
+            if request.user.is_authenticated:
+                if instance.like_users.filter(id=request.user.pk).exists():
+                    ret['is_like'] = True
+        return ret
+
+
+class MovieLikeSerializer(serializers.ModelSerializer):
+    user = serializers.StringRelatedField(read_only=True)
+
+    class Meta:
+        model = MovieLike
+        fields = ('user', )
