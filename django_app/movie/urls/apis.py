@@ -4,14 +4,16 @@ from movie.apis.comment import CommentLikeView, TopCommentView, CommentView, Com
 from movie.apis.famous_line import FamousLikeView, TopFamousView, FamousLiseView, \
     FamousLineDetailView
 from movie.apis.magazine import MagazineList
-from movie.apis.movie_search import MovieSearch, MovieDetail
-
+from movie.apis.movie_search import MovieSearch, MovieListView, MovieDetailView, MovieLikeView
 
 urlpatterns = [
     # 검색페이지
     url(r'^search/$', MovieSearch.as_view(), name='movie_search'),
+    # 영화리스트
+    url(r'^list/', MovieListView.as_view(), name='movie_search'),
     # 영화상세
-    url(r'^(?P<pk>[0-9]+)/$', MovieDetail.as_view(), name='movie_detail'),
+    url(r'^(?P<pk>[0-9]+)/$', MovieDetailView.as_view(), name='movie_detail'),
+    url(r'^(?P<pk>[0-9]+)/movie_like/', MovieLikeView.as_view(), name='comment_like'),
     # 영화평가
     url(r'^(?P<pk>[0-9]+)/comment/$', CommentView.as_view(), name='comment_list'),
     url(r'^(?P<pk>[0-9]+)/comment/top/$', TopCommentView.as_view(), name='comment_top'),
