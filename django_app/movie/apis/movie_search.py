@@ -1,9 +1,13 @@
+from rest_framework import generics
+from rest_framework import permissions
+from rest_framework import status
 from rest_framework.exceptions import NotAcceptable
+from rest_framework.pagination import CursorPagination
 from rest_framework.views import APIView
-from movie.models import Movie
+from movie.models import Movie, MovieLike
 from rest_framework.response import Response
 from apis.daum import movie_search
-from movie.serializers.movie import MovieDetailSerializer, MovieSerializer
+from movie.serializers.movie import MovieDetailSerializer, MovieSerializer, MovieLikeSerializer
 
 
 class MovieSearch(APIView):
@@ -50,16 +54,35 @@ class MovieSearch(APIView):
             serializer = MovieSerializer(movie, many=True)
             return Response(serializer.data)
 
+class MovieListView(generics.ListAPIView):
+    serializer_class = MovieDetailSerializer
+    permission_classes = (permissions.AllowAny,)
+    pagination_class = CursorPagination
+    queryset = Movie.objects.all()
 
-class MovieList(APIView):
-    def get(self, request):
-        movie = Movie.objects.all()
-        serializer = MovieDetailSerializer(movie, many=True)
-        return Response(serializer.data)
+
+class MovieDetailView(generics.RetrieveAPIView):
+    serializer_class = MovieDetailSerializer
+    permission_classes = (permissions.AllowAny,)
+
+    def get_queryset(self):
+        movie_pk = self.kwargs['pk']
+        return Movie.objects.filter(pk=movie_pk)
 
 
-class MovieDetail(APIView):
-    def get(self, request, pk):
-        movie = Movie.objects.filter(pk=pk)
-        serializer = MovieDetailSerializer(movie, many=True)
-        return Response(serializer.data[0])
+class MovieLikeView(generics.CreateAPIView):
+    serializer_class = MovieLikeSerializer
+    queryset = MovieLike.objects.all()
+    permission_classes = (permissions.IsAuthenticated, )
+
+    def create(self, request, *args, **kwargs):
+        movie = Movie.objects.get(pk=kwargs['pk'])
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        movie_like_exist = MovieLike.objects.filter(user=request.user, movie=movie)
+        if movie_like_exist.exists():
+            movie_like_exist.delete()
+            return Response(serializer.errors, status=status.HTTP_306_RESERVED)
+        serializer.save(movie=movie, user=request.user)
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)

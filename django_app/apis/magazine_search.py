@@ -29,11 +29,14 @@ def magazine_search():
                 for count in range(len(body)):
                     body = bs_mag.select('div.section_view.section_editor p')[count].text
                     text.append(body)
-                Magazine.objects.get_or_create(
-                    mag_id=mag_id,
-                    img_url=img_url[0],
-                    title=mag_title,
-                    content=text,
-                )
+                if len(text) < 20:
+                    pass
+                else:
+                    Magazine.objects.get_or_create(
+                        mag_id=mag_id,
+                        img_url=img_url[0],
+                        title=mag_title,
+                        content=text,
+                    )
         except:
             pass
