@@ -19,7 +19,7 @@ from django.contrib import admin
 from member.apis.mypage import MyComments, MyFamousLines
 from member.views import ConfirmEmailView
 from movie.apis.box_office import BoxOfficeAPIView
-from movie.apis.comment import NewCommentAPIView
+from movie.apis.comment import NewCommentAPIView, BestComment
 from movie.apis.favorites import GenreView, MakingCountryView, GradeView, UserFavorites
 from movie.apis.magazine import SampleMagazineAPIView
 from movie.apis.movie_recommend import CarouselMovieRecommend, MainMovieList, FavoriteMovieRecommend
@@ -36,6 +36,7 @@ urlpatterns = [
     url(r'^main/movie_recommends/carousel/$', CarouselMovieRecommend().as_view(), name='carousel_movie_recommends'),
     url(r'^main/user_favorites/$', UserFavorites.as_view(), name='user_favorites'),
     url(r'^main/movie_recommends/favorites/$', FavoriteMovieRecommend.as_view(), name='movie_recommend_favorite'),
+    url(r'^main/best_comment/', BestComment.as_view(), name='best_comment'),
     # 취향페이지
     url(r'^favorite/genre/$', GenreView.as_view(), name='favorites'),
     url(r'^favorite/grade/$', GradeView.as_view(), name='favorites'),
