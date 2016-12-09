@@ -24,8 +24,9 @@ TEMPLATES_DIR = os.path.join(BASE_DIR, 'templates')
 
 # DEBUG
 STATIC_S3 = True
-DEBUG = (len(sys.argv) > 1 and sys.argv[1] == 'runserver' or 'makemigrations' or 'migrate' or 'createsuperuser')
-print(sys.argv)
+DEBUG = False
+# DEBUG = (len(sys.argv) > 1 and sys.argv[1] == 'runserver' or 'makemigrations' or 'migrate' or 'createsuperuser')
+# print(sys.argv)
 print('DEBUG : %s' % DEBUG)
 
 if DEBUG:
