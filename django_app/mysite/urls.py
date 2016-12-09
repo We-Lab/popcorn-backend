@@ -13,11 +13,8 @@ Including another URLconf
     1. Import the include() function: from django.conf.urls import url, include
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
-from allauth.account.views import password_reset_from_key, password_reset_done, password_reset
 from django.conf.urls import url, include
 from django.contrib import admin
-from django.views.generic import TemplateView
-
 from member.views import ConfirmEmailView
 from movie.apis.box_office import BoxOfficeAPIView
 from movie.apis.comment import NewCommentAPIView
