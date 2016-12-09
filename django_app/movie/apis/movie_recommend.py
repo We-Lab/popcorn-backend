@@ -1,6 +1,8 @@
 import random
 
 from rest_framework import generics
+from rest_framework import permissions
+from rest_framework.exceptions import NotAcceptable
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -35,3 +37,39 @@ class MainMovieList(generics.ListAPIView):
         if genre is not None:
             queryset = queryset.filter(genre=genre)
         return queryset
+
+
+class FavoriteMovieRecommend(generics.ListAPIView):
+    """
+    취향 선택시 선택지마다 평점 최상위 5개 영화를 뽑고,
+    뽑핀 영화 리스트에서 중복을 제가하고 5개를 랜덤으로 노출시킵니다.
+    """
+    serializer_class = MovieSerializer
+    permission_classes = (permissions.IsAuthenticated,)
+    paginator = None
+
+    def get_queryset(self):
+        genres = self.request.user.favorite_genre.all()
+        grades = self.request.user.favorite_grade.all()
+        making_countrys = self.request.user.favorite_making_country.all()
+        favorite_recommend_movies = []
+        for genre in genres:
+            # print(genre)
+            movies = Movie.objects.filter(genre=genre).order_by('-star_average')[:5]
+            for movie in movies:
+                favorite_recommend_movies.append(movie)
+        for grade in grades:
+            # print(grade)
+            movies = Movie.objects.filter(grade=grade).order_by('-star_average')[:5]
+            for movie in movies:
+                favorite_recommend_movies.append(movie)
+        for making_country in making_countrys:
+            # print(making_country)
+            movies = Movie.objects.filter(making_country=making_country).order_by('-star_average')[:5]
+            for movie in movies:
+                favorite_recommend_movies.append(movie)
+        movie_recommend = random.sample(set(favorite_recommend_movies), 5)
+        if movie_recommend == 0:
+            raise NotAcceptable('취향을 선택해주세요.')
+        return movie_recommend
+
