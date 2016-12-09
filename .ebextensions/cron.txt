@@ -1,2 +1,2 @@
-0 30 * * * /opt/python/run/venv/bin/python /opt/python/current/app/django_app/manage.py get_box_office
-0 0 * * * /opt/python/run/venv/bin/python /opt/python/current/app/django_app/manage.py get_magazine
+0 0 * * * /opt/python/run/venv/bin/python /opt/python/current/app/django_app/manage.py get_box_office
+30 1 * * * /opt/python/run/venv/bin/python /opt/python/current/app/django_app/manage.py get_magazine
