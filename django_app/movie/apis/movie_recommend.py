@@ -54,22 +54,21 @@ class FavoriteMovieRecommend(generics.ListAPIView):
         making_countrys = self.request.user.favorite_making_country.all()
         favorite_recommend_movies = []
         for genre in genres:
-            # print(genre)
             movies = Movie.objects.filter(genre=genre).order_by('-star_average')[:5]
             for movie in movies:
                 favorite_recommend_movies.append(movie)
         for grade in grades:
-            # print(grade)
             movies = Movie.objects.filter(grade=grade).order_by('-star_average')[:5]
             for movie in movies:
                 favorite_recommend_movies.append(movie)
         for making_country in making_countrys:
-            # print(making_country)
             movies = Movie.objects.filter(making_country=making_country).order_by('-star_average')[:5]
             for movie in movies:
                 favorite_recommend_movies.append(movie)
-        movie_recommend = random.sample(set(favorite_recommend_movies), 5)
-        if movie_recommend == 0:
+        if len(set(favorite_recommend_movies)) == 0:
             raise NotAcceptable('취향을 선택해주세요.')
+        elif len(set(favorite_recommend_movies)) < 5:
+            raise NotAcceptable('취향을 더 선택해주세요.')
+        movie_recommend = random.sample(set(favorite_recommend_movies), 5)
         return movie_recommend
 
