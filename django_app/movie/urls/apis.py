@@ -4,6 +4,7 @@ from movie.apis.comment import CommentLikeView, TopCommentView, CommentView, Com
 from movie.apis.famous_line import FamousLikeView, TopFamousView, FamousLiseView, \
     FamousLineDetailView
 from movie.apis.magazine import MagazineList
+from movie.apis.movie_fast_like import MovieFastLike
 from movie.apis.movie_search import MovieSearch, MovieListView, MovieDetailView, MovieLikeView
 
 urlpatterns = [
@@ -26,4 +27,6 @@ urlpatterns = [
     url(r'^famous/(?P<pk>[0-9]+)/famous_like/', FamousLikeView.as_view(), name='famous_like'),
     # 매거진 리스트
     url(r'^magazine/', MagazineList.as_view(), name='magazine_list'),
+    # 빠른 좋아요 페이지
+    url(r'^fast_like/$', MovieFastLike.as_view(), name='movie_fast_like'),
 ]
