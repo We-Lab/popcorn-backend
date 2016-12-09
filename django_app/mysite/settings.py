@@ -50,25 +50,19 @@ EMAIL_HOST_PASSWORD = email_config['EMAIL_HOST_PASSWORD']
 EMAIL_USE_TLS = email_config['EMAIL_USE_TLS']
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
-ACCOUNT_AUTHENTICATION_METHOD = 'email'
+
+
+#EMAIL
 ACCOUNT_EMAIL_REQUIRED = True
-# Make email verification mandatory to avoid junk email accounts
+ACCOUNT_AUTHENTICATION_METHOD = 'username'
 ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
-# Eliminate need to provide username, as it's a very old practice
-ACCOUNT_USERNAME_REQUIRED = False
-
-
-#
-# ACCOUNT_EMAIL_REQUIRED = False
-# ACCOUNT_AUTHENTICATION_METHOD = 'username'
-# ACCOUNT_EMAIL_VERIFICATION = 'optional'
 
 # REST
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework.authentication.BasicAuthentication',
         'rest_framework.authentication.TokenAuthentication',
-        'rest_framework.authentication.SessionAuthentication',
+        # 'rest_framework.authentication.SessionAuthentication',
     ),
     'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.IsAuthenticated',
@@ -86,14 +80,7 @@ AUTHENTICATION_BACKENDS = (
 )
 
 # auth and allauth settings
-LOGIN_REDIRECT_URL = '/member/login/'
-# SOCIALACCOUNT_QUERY_EMAIL = True
-# SOCIALACCOUNT_PROVIDERS = {
-#     'facebook': {
-#         'SCOPE': ['email', 'publish_stream'],
-#         'METHOD': 'js_sdk'  # instead of 'oauth2'
-#     }
-# }
+LOGIN_REDIRECT_URL = '/movie/1/'
 
 
 REST_AUTH_REGISTER_SERIALIZERS = {
