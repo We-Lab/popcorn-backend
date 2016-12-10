@@ -17,7 +17,7 @@ class CarouselMovieRecommend(APIView):
     """
     def get(self, request, *args, **kwargs):
         movie = Movie.objects.all().order_by('-star_average')[:10]
-        movie_recommend = random.sample(set(movie), 2)
+        movie_recommend = random.sample(set(movie), 3)
         serializer = MovieSerializer(movie_recommend, many=True)
         return Response(serializer.data)
 

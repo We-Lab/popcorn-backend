@@ -99,7 +99,7 @@ class TopCommentView(APIView):
 
 class NewCommentAPIView(APIView):
     def get(self, request, *args, **kwargs):
-        comment = Comment.objects.all().order_by('-created')[:10]
+        comment = Comment.objects.all().order_by('-created')[:6]
         serializer = CommentSerializer(comment, many=True)
         return Response(serializer.data)
 
