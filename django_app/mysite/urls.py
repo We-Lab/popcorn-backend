@@ -17,7 +17,7 @@ from django.conf.urls import url, include
 from django.contrib import admin
 
 from member.apis.mypage import MyComments, MyFamousLines
-from member.views import ConfirmEmailView
+from member.views import ConfirmEmailView, PasswordResetView, PasswordResetConfirmView
 from movie.apis.box_office import BoxOfficeAPIView
 from movie.apis.comment import NewCommentAPIView, BestComment
 from movie.apis.favorites import GenreView, MakingCountryView, GradeView, UserFavorites
@@ -47,6 +47,8 @@ urlpatterns = [
     url(r'^accounts/', include('allauth.urls')),
     url(r'^member/', include('rest_auth.urls')),
     url(r'^member/registration/', include('rest_auth.registration.urls')),
+    url(r'^member/password/reset/$', PasswordResetView.as_view(), name='rest_password_reset'),
+    url(r'^member/password/reset/confirm/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/$', PasswordResetConfirmView.as_view(), name='rest_password_reset_confirm'),
     url(r'^account-confirm-email/(?P<key>[-:\w]+)/$', ConfirmEmailView.as_view(), name='account_confirm_email'),
     url(r'^member/my_comments/', MyComments.as_view(), name='my_comment'),
     url(r'^member/my_famous/', MyFamousLines.as_view(), name='my_famous'),

@@ -7,21 +7,21 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 
 
 class Genre(models.Model):
-    genre = models.CharField(max_length=30, unique=True)
+    content = models.CharField(max_length=30, unique=True)
 
     def __str__(self):
         return self.genre
 
 
 class Grade(models.Model):
-    grade = models.CharField(max_length=30, unique=True)
+    content = models.CharField(max_length=30, unique=True)
 
     def __str__(self):
         return self.grade
 
 
 class MakingCountry(models.Model):
-    making_country = models.CharField(max_length=30, unique=True)
+    content = models.CharField(max_length=30, unique=True)
 
     def __str__(self):
         return self.making_country

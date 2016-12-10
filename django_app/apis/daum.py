@@ -48,14 +48,24 @@ def video_search(request):
     return video_trailer_url
 
 
+# def resize_image(request):
+#     index = 4
+#     image_split = request.rsplit('/', 5)
+#     replacement = ['R200x0.q99', 'R500x0.q99', 'R700x0.q99']
+#     movie_img_url = []
+#     for nums in range(3):
+#         image_split[index] = replacement[nums]
+#         movie_img_url.append('/'.join(image_split))
+#     return movie_img_url
+
+
 def resize_image(request):
     index = 4
     image_split = request.rsplit('/', 5)
-    replacement = ['R200x0.q99', 'R500x0.q99', 'R700x0.q99']
+    replacement = ['R700x0.q99']
     movie_img_url = []
-    for nums in range(3):
-        image_split[index] = replacement[nums]
-        movie_img_url.append('/'.join(image_split))
+    image_split[index] = replacement[0]
+    movie_img_url.append('/'.join(image_split))
     return movie_img_url
 
 
@@ -78,8 +88,8 @@ def resized_image_list_genorater(movie_search, num, request):
     while True:
         try:
             detail = movie_search.get("channel").get("item")[int(num)].get(request + "{}".format(count)).get("content")
-            resized_detail = resize_image(detail)
-            resized_list.append(resized_detail)
+            sub_photo = resize_image(detail)
+            resized_list.append(sub_photo)
             count += 1
         except:
             break
@@ -118,7 +128,6 @@ def movie_search(keyword):
             grade = Grade.objects.get_or_create(
                 grade=grade,
             )
-
             movie = Movie.objects.create(
                 daum_id=daum_id[0],
                 title_kor=title_kor,
@@ -144,8 +153,8 @@ def movie_search(keyword):
                 specific_movie.save()
 
                 img_url = movie_search.get("channel").get("item")[int(num)].get("thumbnail")[0].get("content")
-                movie_main_image = resize_image(img_url)
-                specific_movie.img_url = movie_main_image
+                main_img = resize_image(img_url)
+                specific_movie.img_url = main_img
                 specific_movie.save()
             except:
                 pass

@@ -64,7 +64,7 @@ class GenreSerializer(serializers.ModelSerializer):
         model = Genre
         fields = (
             'pk',
-            'genre',
+            'content',
         )
 
 
@@ -73,7 +73,7 @@ class GradeSerializer(serializers.ModelSerializer):
         model = Grade
         fields = (
             'pk',
-            'grade',
+            'content',
         )
 
 
@@ -82,7 +82,7 @@ class MakingCountrySerializer(serializers.ModelSerializer):
         model = MakingCountry
         fields = (
             'pk',
-            'making_country',
+            'content',
         )
 
 class MovieSerializer(serializers.ModelSerializer):
