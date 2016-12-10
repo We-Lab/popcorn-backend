@@ -1,15 +1,19 @@
+import random
+from operator import attrgetter
+
 from django.db.models import Count
 from rest_framework import generics
 from rest_framework import permissions
 from rest_framework import status
+from rest_framework.exceptions import NotAcceptable
 from rest_framework.pagination import CursorPagination
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from member.models import MyUser
-from movie.models import Comment, Movie, CommentLike
+from movie.models import Comment, Movie, CommentLike, BoxOfficeMovie
 from movie.permissions import IsOwnerOrReadOnly
-from movie.serializers.comment import CommentSerializer, CommentLikeSerializer
+from movie.serializers.comment import CommentSerializer, CommentLikeSerializer, MyCommentStarSerializer
 
 
 class CommentView(generics.ListCreateAPIView):
@@ -24,6 +28,8 @@ class CommentView(generics.ListCreateAPIView):
     def perform_create(self, serializer):
         movie = Movie.objects.get(pk=self.kwargs['pk'])
         author = MyUser.objects.get(pk=self.request.user.pk)
+        if Comment.objects.filter(movie=movie, author=author).exists():
+            raise NotAcceptable('이미 코멘트를 작성했습니다')
         serializer.save(movie=movie, author=author)
         movie.comment_count += 1
         new_star = float(self.request.data['star'])
@@ -95,6 +101,41 @@ class TopCommentView(APIView):
 
 class NewCommentAPIView(APIView):
     def get(self, request, *args, **kwargs):
-        comment = Comment.objects.all().order_by('-created')[:10]
+        comment = Comment.objects.all().order_by('-created')[:6]
         serializer = CommentSerializer(comment, many=True)
         return Response(serializer.data)
+
+
+class BestComment(APIView):
+    """
+    베스트 코멘트를 하나 출력합니다
+    => 금주 박스오피스에 속한 코멘트 중, 코멘트 좋아요 상위 5개 중 1개 랜덤 추출
+
+    """
+    def get(self, request, *args, **kwargs):
+        box_office = BoxOfficeMovie.objects.all().order_by('-created')[:10]
+        comments = []
+        for i in box_office:
+            comment = Comment.objects.filter(movie__pk=i.movie.pk)
+            for k in comment:
+                comments.append(k)
+        print('첫번째', comments)
+        comments = sorted(comments, key=attrgetter('likes_count'), reverse=True)
+        comments = comments[:5]
+        print('두번째', comments)
+        if len(comments) == 0:
+            raise NotAcceptable('코멘트가 없습니다')
+        else:
+            best_comment = random.sample(comments, 1)
+        serializer = CommentSerializer(best_comment, many=True)
+        return Response(serializer.data)
+
+
+class MyCommentStarView(generics.RetrieveAPIView):
+    serializer_class = MyCommentStarSerializer
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def get_object(self):
+        user = self.request.user
+        movie = self.kwargs['pk']
+        return Comment.objects.get(author=user, movie=movie)
