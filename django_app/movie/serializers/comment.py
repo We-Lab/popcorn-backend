@@ -39,3 +39,10 @@ class CommentLikeSerializer(serializers.ModelSerializer):
     class Meta:
         model = CommentLike
         fields = ('user', )
+
+
+class MyCommentStarSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Comment
+        fields = ('star', )

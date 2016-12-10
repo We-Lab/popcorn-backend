@@ -13,7 +13,7 @@ from rest_framework.views import APIView
 from member.models import MyUser
 from movie.models import Comment, Movie, CommentLike, BoxOfficeMovie
 from movie.permissions import IsOwnerOrReadOnly
-from movie.serializers.comment import CommentSerializer, CommentLikeSerializer
+from movie.serializers.comment import CommentSerializer, CommentLikeSerializer, MyCommentStarSerializer
 
 
 class CommentView(generics.ListCreateAPIView):
@@ -129,3 +129,13 @@ class BestComment(APIView):
             best_comment = random.sample(comments, 1)
         serializer = CommentSerializer(best_comment, many=True)
         return Response(serializer.data)
+
+
+class MyCommentStarView(generics.RetrieveAPIView):
+    serializer_class = MyCommentStarSerializer
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def get_object(self):
+        user = self.request.user
+        movie = self.kwargs['pk']
+        return Comment.objects.get(author=user, movie=movie)
