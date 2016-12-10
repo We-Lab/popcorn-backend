@@ -36,7 +36,7 @@ class MovieSearch(APIView):
             hash_eng1 = ''
 
         if len(title) == 0:
-            raise NotAcceptable('keyword is not valid')
+            raise NotAcceptable('0')
         elif Movie.objects.filter(title_kor__icontains=keyword).exists():
             movie = Movie.objects.filter(title_kor__icontains=keyword)
             serializer = MovieSerializer(movie, many=True)
