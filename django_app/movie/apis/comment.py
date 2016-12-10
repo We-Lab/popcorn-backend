@@ -28,6 +28,8 @@ class CommentView(generics.ListCreateAPIView):
     def perform_create(self, serializer):
         movie = Movie.objects.get(pk=self.kwargs['pk'])
         author = MyUser.objects.get(pk=self.request.user.pk)
+        if Comment.objects.filter(movie=movie, author=author).exists():
+            raise NotAcceptable('이미 코멘트를 작성했습니다')
         serializer.save(movie=movie, author=author)
         movie.comment_count += 1
         new_star = float(self.request.data['star'])
@@ -99,7 +101,7 @@ class TopCommentView(APIView):
 
 class NewCommentAPIView(APIView):
     def get(self, request, *args, **kwargs):
-        comment = Comment.objects.all().order_by('-created')[:10]
+        comment = Comment.objects.all().order_by('-created')[:6]
         serializer = CommentSerializer(comment, many=True)
         return Response(serializer.data)
 

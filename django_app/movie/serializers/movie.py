@@ -40,6 +40,7 @@ class ActorDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = Actor
         fields = (
+            'id',
             'daum_id',
             'name_kor',
             'name_eng',
