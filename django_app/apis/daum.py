@@ -126,7 +126,7 @@ def movie_search(keyword):
             people_info = people(title_link)
 
             grade = Grade.objects.get_or_create(
-                grade=grade,
+                content=grade,
             )
             movie = Movie.objects.create(
                 daum_id=daum_id[0],
@@ -162,14 +162,14 @@ def movie_search(keyword):
 
             for genres in genre_list:
                 genre = Genre.objects.get_or_create(
-                    genre=genres,
+                    content=genres,
                 )
                 specific_movie.genre.add(genre[0])
 
 
             for nations in nation_list:
                 country = MakingCountry.objects.get_or_create(
-                    making_country=nations,
+                    content=nations,
                 )
                 specific_movie.making_country.add(country[0])
 
