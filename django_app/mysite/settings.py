@@ -24,9 +24,13 @@ TEMPLATES_DIR = os.path.join(BASE_DIR, 'templates')
 
 # DEBUG
 STATIC_S3 = True
-DEBUG = False
-# DEBUG = (len(sys.argv) > 1 and sys.argv[1] == 'runserver' or 'makemigrations' or 'migrate' or 'createsuperuser')
-# print(sys.argv)
+en_name = os.environ.get('LOGNAME')
+
+if 'USER' in os.environ and os.environ['USER'] == en_name:
+    DEBUG = True
+else:
+    DEBUG = False
+
 print('DEBUG : %s' % DEBUG)
 
 if DEBUG:
