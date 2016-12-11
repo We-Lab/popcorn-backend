@@ -24,9 +24,14 @@ TEMPLATES_DIR = os.path.join(BASE_DIR, 'templates')
 
 # DEBUG
 STATIC_S3 = True
-DEBUG = False
-# DEBUG = (len(sys.argv) > 1 and sys.argv[1] == 'runserver' or 'makemigrations' or 'migrate' or 'createsuperuser')
-# print(sys.argv)
+
+en_name = os.environ.get('LOGNAME')
+
+if 'USER' in os.environ and os.environ['USER'] == en_name:
+    DEBUG = True
+else:
+    DEBUG = False
+
 print('DEBUG : %s' % DEBUG)
 
 if DEBUG:
@@ -114,8 +119,10 @@ CORS_ORIGIN_WHITELIST = (
     '127.0.0.1',
     'popcorn-backend2-dev.ap-northeast-2.elasticbeanstalk.com',
     '.django-test.com',
+    # 다음 크롤링
     'movie.daum.net',
     'apis.daum.net/contents/movie',
+    'videofarm.daum.net',
 )
 
 

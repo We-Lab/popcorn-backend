@@ -7,6 +7,7 @@ from member.models import MyUser
 
 
 class RegistrationSerializer(RegisterSerializer):
+    nickname = serializers.CharField(required=True)
     gender = serializers.CharField(required=True)
     date_of_birth = serializers.DateField(required=True)
     phone_number = serializers.CharField(required=False)
@@ -14,6 +15,7 @@ class RegistrationSerializer(RegisterSerializer):
 
     def get_cleaned_data(self):
         return {
+            'nickname': self.validated_data.get('nickname', ''),
             'gender': self.validated_data.get('gender', ''),
             'date_of_birth': self.validated_data.get('date_of_birth', ''),
             'phone_number': self.validated_data.get('phone_number', ''),
@@ -28,6 +30,7 @@ class RegistrationSerializer(RegisterSerializer):
         user = adapter.new_user(request)
         self.cleaned_data = self.get_cleaned_data()
 
+        user.nickname = self.cleaned_data['nickname']
         user.gender = self.cleaned_data['gender']
         user.phone_number = self.cleaned_data['phone_number']
         user.date_of_birth = self.cleaned_data['date_of_birth']
@@ -45,6 +48,7 @@ class UserSerializer(serializers.ModelSerializer):
         model = MyUser
         fields = (
             'username',
+            'nickname',
             'email',
             'gender',
             'date_of_birth',
@@ -55,3 +59,12 @@ class UserSerializer(serializers.ModelSerializer):
             'favorite_making_country',
         )
         read_only_fields = ('username', )
+
+
+class MyInfoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = MyUser
+        fields = (
+            'nickname',
+            'profile_img',
+        )
