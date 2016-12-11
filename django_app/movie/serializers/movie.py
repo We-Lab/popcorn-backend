@@ -63,7 +63,7 @@ class GenreSerializer(serializers.ModelSerializer):
     class Meta:
         model = Genre
         fields = (
-            'pk',
+            'id',
             'content',
         )
 
@@ -72,7 +72,7 @@ class GradeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Grade
         fields = (
-            'pk',
+            'id',
             'content',
         )
 
@@ -81,7 +81,7 @@ class MakingCountrySerializer(serializers.ModelSerializer):
     class Meta:
         model = MakingCountry
         fields = (
-            'pk',
+            'id',
             'content',
         )
 

@@ -42,7 +42,7 @@ class MainMovieList(generics.ListAPIView):
 class FavoriteMovieRecommend(generics.ListAPIView):
     """
     취향 선택시 선택지마다 평점 최상위 5개 영화를 뽑고,
-    뽑핀 영화 리스트에서 중복을 제가하고 5개를 랜덤으로 노출시킵니다.
+    뽑핀 영화 리스트에서 중복을 제거하고 5개를 랜덤으로 노출시킵니다.
     """
     serializer_class = MovieSerializer
     permission_classes = (permissions.IsAuthenticated,)
