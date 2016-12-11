@@ -108,7 +108,7 @@ def movie_search(keyword):
         title.append(title_eng)
         title_link = movie_search.get("channel").get("item")[int(num)].get("title")[0].get("link")
         daum_id = re.findall(r'\d+', title_link)
-        if Movie.objects.filter(daum_id=daum_id[0]):
+        if Movie.objects.filter(daum_id=daum_id[0]).exists():
             pass
         else:
             title_eng = movie_search.get("channel").get("item")[int(num)].get("eng_title")[0].get("content")
