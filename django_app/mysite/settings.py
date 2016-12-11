@@ -24,7 +24,7 @@ TEMPLATES_DIR = os.path.join(BASE_DIR, 'templates')
 
 # DEBUG
 STATIC_S3 = True
-DEBUG = False
+DEBUG = True
 # DEBUG = (len(sys.argv) > 1 and sys.argv[1] == 'runserver' or 'makemigrations' or 'migrate' or 'createsuperuser')
 # print(sys.argv)
 print('DEBUG : %s' % DEBUG)
@@ -107,6 +107,18 @@ ALLOWED_HOSTS = [
 ]
 
 
+CORS_ORIGIN_WHITELIST = (
+    'google.com',
+    '192.168.0.197',
+    'localhost',
+    '127.0.0.1',
+    'popcorn-backend2-dev.ap-northeast-2.elasticbeanstalk.com',
+    '.django-test.com',
+    'movie.daum.net',
+    'apis.daum.net/contents/movie',
+)
+
+
 # Application definition
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -115,6 +127,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
     # login
     'rest_framework',
     'rest_framework.authtoken',
@@ -129,18 +142,23 @@ INSTALLED_APPS = [
     'rest_auth',
     'rest_auth.registration',
     'storages',
+
     # contrab
     'django_crontab',
 
     'member',
     'movie',
     'test_app',
+
+    'corsheaders',
 ]
 
 SITE_ID = 1
 
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.common.CommonMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
