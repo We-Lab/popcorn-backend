@@ -145,15 +145,15 @@ def movie_search(keyword):
                     url=photo,
                     )
 
-            specific_movie = Movie.objects.get(daum_id=daum_id[0])
             try:
+                specific_movie = Movie.objects.get(daum_id=daum_id[0])
                 trailer_link = movie_search.get("channel").get("item")[int(num)].get("trailer")[0].get("link")
                 main_trailer = video_search(trailer_link)
                 specific_movie.main_trailer = main_trailer
                 specific_movie.save()
 
                 img_url = movie_search.get("channel").get("item")[int(num)].get("thumbnail")[0].get("content")
-                main_img = resize_image(img_url)
+                main_img = resize_image(img_url)[0]
                 specific_movie.img_url = main_img
                 specific_movie.save()
             except:
@@ -161,6 +161,7 @@ def movie_search(keyword):
 
 
             for genres in genre_list:
+                specific_movie = Movie.objects.get(daum_id=daum_id[0])
                 genre = Genre.objects.get_or_create(
                     content=genres,
                 )
@@ -168,6 +169,7 @@ def movie_search(keyword):
 
 
             for nations in nation_list:
+                specific_movie = Movie.objects.get(daum_id=daum_id[0])
                 country = MakingCountry.objects.get_or_create(
                     content=nations,
                 )
@@ -175,6 +177,7 @@ def movie_search(keyword):
 
 
             for person in people_info:
+                specific_movie = Movie.objects.get(daum_id=daum_id[0])
                 if person['character_name'] == '감독':
                     director = Director.objects.get_or_create(
                         daum_id=person['daum_id'][0],
