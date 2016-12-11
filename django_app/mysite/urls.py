@@ -40,9 +40,9 @@ urlpatterns = [
     url(r'^main/movie_recommends/favorites/IOS/$', FavoriteMovieRecommendIOS.as_view(), name='movie_recommend_favorite'),
     url(r'^main/best_comment/', BestComment.as_view(), name='best_comment'),
     # 취향페이지
-    url(r'^favorite/genre/$', GenreView.as_view(), name='favorites'),
-    url(r'^favorite/grade/$', GradeView.as_view(), name='favorites'),
-    url(r'^favorite/making_country/$', MakingCountryView.as_view(), name='favorites'),
+    url(r'^favorite/genre/$', GenreView.as_view(), name='favorites_genre'),
+    url(r'^favorite/grade/$', GradeView.as_view(), name='favorites_grade'),
+    url(r'^favorite/making_country/$', MakingCountryView.as_view(), name='favorites_making_cuntry'),
     # 회원페이지
     url(r'^accounts/', include('allauth.urls')),
     url(r'^member/', include('rest_auth.urls')),
