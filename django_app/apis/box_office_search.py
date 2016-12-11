@@ -39,6 +39,8 @@ def box_office_search():
         # 예매율 파싱
         ticketing_rate_element = box_office_elements[i].select('dd')[1].text
         ticketing_parsed = re.findall(r'\d+\.\d+', ticketing_rate_element)
+        if len(ticketing_parsed) == 0:
+            ticketing_parsed = re.findall(r'\d+', ticketing_rate_element)
         ticketing_list = ticketing_parsed[0]
         ticketing_rate = float(ticketing_list)
         print(ticketing_rate)
