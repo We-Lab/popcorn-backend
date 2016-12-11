@@ -100,8 +100,12 @@ class TopCommentView(APIView):
 
 
 class NewCommentAPIView(APIView):
+    """
+    최신 댓글에서 6개 출력합니다.
+    별점만 있는 댓글 제외합니다.
+    """
     def get(self, request, *args, **kwargs):
-        comment = Comment.objects.all().order_by('-created')[:6]
+        comment = Comment.objects.exclude(content__isnull=True).exclude(content__exact='').order_by('-created')[:6]
         serializer = CommentSerializer(comment, many=True)
         return Response(serializer.data)
 
