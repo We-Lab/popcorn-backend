@@ -16,7 +16,7 @@ Including another URLconf
 from django.conf.urls import url, include
 from django.contrib import admin
 
-from member.apis.mypage import MyComments, MyFamousLines
+from member.apis.mypage import MyComments, MyFamousLines, MyInfo
 from member.views import ConfirmEmailView, PasswordResetView, PasswordResetConfirmView
 from movie.apis.box_office import BoxOfficeAPIView
 from movie.apis.comment import NewCommentAPIView, BestComment
@@ -52,6 +52,7 @@ urlpatterns = [
     url(r'^account-confirm-email/(?P<key>[-:\w]+)/$', ConfirmEmailView.as_view(), name='account_confirm_email'),
     url(r'^member/my_comments/', MyComments.as_view(), name='my_comment'),
     url(r'^member/my_famous/', MyFamousLines.as_view(), name='my_famous'),
+    url(r'^member/my_info/', MyInfo.as_view(), name='my_info'),
     # 테스트페이지
     url(r'^test-api/', include('test_app.urls', namespace='test')),
     # 영화페이지
