@@ -89,7 +89,7 @@ def resized_image_list_genorater(movie_search, num, request):
         try:
             detail = movie_search.get("channel").get("item")[int(num)].get(request + "{}".format(count)).get("content")
             sub_photo = resize_image(detail)
-            resized_list.append(sub_photo)
+            resized_list.append(sub_photo[0])
             count += 1
         except:
             break
@@ -101,20 +101,21 @@ def movie_search_func(keyword):
     movie_search = r.json()
     title = []
     num_of_movies = movie_search.get("channel").get("totalCount")
-    # print('num_of_movies', num_of_movies)
+    print('num_of_movies', num_of_movies)
     for num in range(num_of_movies):
+        print(num)
         title_eng = movie_search.get("channel").get("item")[int(num)].get("eng_title")[0].get("content")
         title_kor = movie_search.get("channel").get("item")[int(num)].get("title")[0].get("content")
         title.append(title_kor)
         title.append(title_eng)
         title_link = movie_search.get("channel").get("item")[int(num)].get("title")[0].get("link")
         daum_id = re.findall(r'\d+', title_link)
-        # print('daum_id', daum_id)
+        print('daum_id', daum_id)
         if Movie.objects.filter(daum_id=daum_id[0]).exists():
-            # print('search')
+            print('search')
             pass
         else:
-            # print('save')
+            print('save')
             # title_eng = movie_search.get("channel").get("item")[int(num)].get("eng_title")[0].get("content")
             # title_kor = movie_search.get("channel").get("item")[int(num)].get("title")[0].get("content")
             created_year = movie_search.get("channel").get("item")[int(num)].get("year")[0].get("content")
