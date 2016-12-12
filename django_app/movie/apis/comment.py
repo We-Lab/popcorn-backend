@@ -143,3 +143,18 @@ class MyCommentStarView(generics.RetrieveAPIView):
         user = self.request.user
         movie = self.kwargs['pk']
         return Comment.objects.get(author=user, movie=movie)
+
+
+class StarHistogram(APIView):
+    """
+    별점 분포도입니다.
+    dict type 이라 출력순서가 랜덤합니다.
+
+    """
+    def get(self, request, *args, **kwargs):
+        ret = {}
+        for i in range(11):
+            star = i * 0.5
+            comment = Comment.objects.filter(star=star, movie=self.kwargs['pk'])
+            ret[star] = len(comment)
+        return Response(ret)
