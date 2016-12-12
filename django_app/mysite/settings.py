@@ -24,6 +24,7 @@ TEMPLATES_DIR = os.path.join(BASE_DIR, 'templates')
 
 # DEBUG
 STATIC_S3 = True
+
 en_name = os.environ.get('LOGNAME')
 
 if 'USER' in os.environ and os.environ['USER'] == en_name:
@@ -199,12 +200,14 @@ WSGI_APPLICATION = 'mysite.wsgi.application'
 
 # Database
 if DEBUG:
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-        }
-    }
+    DATABASES = config['databases']
+    #
+    # DATABASES = {
+    #     'default': {
+    #         'ENGINE': 'django.db.backends.sqlite3',
+    #         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+    #     }
+    # }
 else:
     DATABASES = config['databases']
 
