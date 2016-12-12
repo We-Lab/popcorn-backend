@@ -78,7 +78,10 @@ class CommentLikeView(generics.CreateAPIView):
 
     # post 요청시 좋아요 생성 또는 삭제
     def create(self, request, *args, **kwargs):
-        comment = Comment.objects.get(pk=kwargs['pk'])
+        try:
+            comment = Comment.objects.get(pk=kwargs['pk'])
+        except:
+            raise NotAcceptable('댓글이 존재하지 않습니다.')
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         comment_like_exist = CommentLike.objects.filter(user=request.user, comment=comment)

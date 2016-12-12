@@ -61,7 +61,10 @@ class FamousLikeView(generics.CreateAPIView):
 
     # post 요청시 좋아요 생성 또는 삭제
     def create(self, request, *args, **kwargs):
-        famous_line = FamousLine.objects.get(pk=kwargs['pk'])
+        try:
+            famous_line = FamousLine.objects.get(pk=kwargs['pk'])
+        except:
+            raise NotAcceptable('명대사가 존재하지 않습니다.')
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         famous_like_exist = FamousLike.objects.filter(user=request.user, famous_line=famous_line)
