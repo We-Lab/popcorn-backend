@@ -11,7 +11,7 @@ urlpatterns = [
     # 검색페이지
     url(r'^search/$', MovieSearch.as_view(), name='movie_search'),
     # 영화리스트
-    url(r'^list/', MovieListView.as_view(), name='movie_search'),
+    url(r'^list/', MovieListView.as_view(), name='movie_list'),
     # 영화상세
     url(r'^(?P<pk>[0-9]+)/$', MovieDetailView.as_view(), name='movie_detail'),
     url(r'^(?P<pk>[0-9]+)/movie_like/', MovieLikeView.as_view(), name='comment_like'),

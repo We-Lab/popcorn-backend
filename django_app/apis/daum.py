@@ -115,8 +115,8 @@ def movie_search_func(keyword):
             pass
         else:
             # print('save')
-            title_eng = movie_search.get("channel").get("item")[int(num)].get("eng_title")[0].get("content")
-            title_kor = movie_search.get("channel").get("item")[int(num)].get("title")[0].get("content")
+            # title_eng = movie_search.get("channel").get("item")[int(num)].get("eng_title")[0].get("content")
+            # title_kor = movie_search.get("channel").get("item")[int(num)].get("title")[0].get("content")
             created_year = movie_search.get("channel").get("item")[int(num)].get("year")[0].get("content")
             run_time = movie_search.get("channel").get("item")[int(num)].get("open_info")[2].get("content")
             grade = movie_search.get("channel").get("item")[int(num)].get("open_info")[1].get("content")
