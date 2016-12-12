@@ -92,7 +92,7 @@ class Movie(BaseModel):
 
 class MovieImages(models.Model):
     movie = models.ForeignKey(Movie)
-    url = models.CharField(max_length=100)
+    url = models.TextField()
 
 
 class MovieActor(models.Model):
