@@ -6,20 +6,22 @@ from rest_framework.pagination import CursorPagination
 from rest_framework.views import APIView
 from movie.models import Movie, MovieLike
 from rest_framework.response import Response
-from apis.daum import movie_search
+from apis.daum import movie_search_func
 from movie.serializers.movie import MovieDetailSerializer, MovieSerializer, MovieLikeSerializer
 
 
 class MovieSearch(APIView):
     def get(self, request):
         keyword = request.GET.get('keyword')
-
-        title = movie_search(keyword)
+        # print('keyword', keyword)
+        title = movie_search_func(keyword)
+        # print('title', title)
 
         try:
             hash_kor = title[0].split()[0]
         except:
             hash_kor = ''
+
         try:
             hash_kor1 = title[0].split()[1]
         except:
@@ -34,6 +36,8 @@ class MovieSearch(APIView):
             hash_eng1 = title[1].split()[1]
         except:
             hash_eng1 = ''
+
+        # print(hash_kor, hash_kor1, hash_eng, hash_eng1)
 
         if len(title) == 0:
             raise NotAcceptable('0')
