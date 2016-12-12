@@ -156,8 +156,9 @@ class StarHistogram(APIView):
     """
     def get(self, request, *args, **kwargs):
         ret = {}
+        comment = Comment.objects.filter(movie=self.kwargs['pk'])
         for i in range(11):
             star = i * 0.5
-            comment = Comment.objects.filter(star=star, movie=self.kwargs['pk'])
-            ret[star] = len(comment)
+            comment_star = comment.filter(star=star)
+            ret[star] = len(comment_star)
         return Response(ret)
