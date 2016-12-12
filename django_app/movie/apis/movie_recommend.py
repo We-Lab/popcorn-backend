@@ -7,7 +7,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from movie.models import Movie
-from movie.serializers.movie import MovieSerializer
+from movie.serializers.movie import MovieSerializer, MovieDetailSerializer
 from mysite.utils.custom_pagination import LargeResultsSetPagination
 
 
@@ -18,7 +18,7 @@ class CarouselMovieRecommend(APIView):
     def get(self, request, *args, **kwargs):
         movie = Movie.objects.all().order_by('-star_average')[:10]
         movie_recommend = random.sample(set(movie), 3)
-        serializer = MovieSerializer(movie_recommend, many=True)
+        serializer = MovieDetailSerializer(movie_recommend, many=True)
         return Response(serializer.data)
 
 
