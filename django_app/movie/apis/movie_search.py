@@ -67,12 +67,18 @@ class MovieListView(generics.ListAPIView):
 
 
 class MovieDetailView(generics.RetrieveAPIView):
+    """
+    영화 상세정보를 출력합니다.
+    """
     serializer_class = MovieDetailSerializer
     permission_classes = (permissions.AllowAny,)
 
     def get_queryset(self):
         movie_pk = self.kwargs['pk']
-        return Movie.objects.filter(pk=movie_pk)
+        result = Movie.objects.filter(pk=movie_pk)
+        if result:
+            return result
+        raise NotAcceptable('찾는 영화가 없습니다.')
 
 
 class MovieLikeView(generics.CreateAPIView):
