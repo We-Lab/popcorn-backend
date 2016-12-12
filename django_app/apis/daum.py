@@ -6,7 +6,7 @@ from movie.models import Movie, Grade, Genre, MakingCountry, MovieImages, Actor,
 from mysite import settings
 
 __all__ = [
-    'movie_search',
+    'movie_search_func',
 ]
 
 
@@ -71,15 +71,15 @@ def resize_image(request):
 
 def list_genorater(movie_search, num, request):
     count = 0
-    list = []
+    gen_list = []
     while True:
         try:
             detail = movie_search.get("channel").get("item")[int(num)].get(request)[count].get("content")
-            list.append(detail)
+            gen_list.append(detail)
             count += 1
         except:
             break
-    return list
+    return gen_list
 
 
 def resized_image_list_genorater(movie_search, num, request):
@@ -96,21 +96,25 @@ def resized_image_list_genorater(movie_search, num, request):
     return resized_list
 
 
-def movie_search(keyword):
+def movie_search_func(keyword):
     r = requests.get("https://apis.daum.net/contents/movie?apikey={}&q={}&output=json".format(settings.DAUM_API_KEY, keyword))
     movie_search = r.json()
     title = []
     num_of_movies = movie_search.get("channel").get("totalCount")
+    # print('num_of_movies', num_of_movies)
     for num in range(num_of_movies):
-        title_eng = movie_search.get("channel").get("item")[0].get("eng_title")[0].get("content")
-        title_kor = movie_search.get("channel").get("item")[0].get("title")[0].get("content")
+        title_eng = movie_search.get("channel").get("item")[int(num)].get("eng_title")[0].get("content")
+        title_kor = movie_search.get("channel").get("item")[int(num)].get("title")[0].get("content")
         title.append(title_kor)
         title.append(title_eng)
         title_link = movie_search.get("channel").get("item")[int(num)].get("title")[0].get("link")
         daum_id = re.findall(r'\d+', title_link)
+        # print('daum_id', daum_id)
         if Movie.objects.filter(daum_id=daum_id[0]).exists():
+            # print('search')
             pass
         else:
+            # print('save')
             title_eng = movie_search.get("channel").get("item")[int(num)].get("eng_title")[0].get("content")
             title_kor = movie_search.get("channel").get("item")[int(num)].get("title")[0].get("content")
             created_year = movie_search.get("channel").get("item")[int(num)].get("year")[0].get("content")
@@ -138,7 +142,6 @@ def movie_search(keyword):
                 run_time=run_time,
             )
 
-
             for photo in sub_movie_images:
                 MovieImages.objects.create(
                     movie=movie,
@@ -159,7 +162,6 @@ def movie_search(keyword):
             except:
                 pass
 
-
             for genres in genre_list:
                 specific_movie = Movie.objects.get(daum_id=daum_id[0])
                 genre = Genre.objects.get_or_create(
@@ -167,14 +169,12 @@ def movie_search(keyword):
                 )
                 specific_movie.genre.add(genre[0])
 
-
             for nations in nation_list:
                 specific_movie = Movie.objects.get(daum_id=daum_id[0])
                 country = MakingCountry.objects.get_or_create(
                     content=nations,
                 )
                 specific_movie.making_country.add(country[0])
-
 
             for person in people_info:
                 specific_movie = Movie.objects.get(daum_id=daum_id[0])
