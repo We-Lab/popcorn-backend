@@ -85,6 +85,7 @@ class MakingCountrySerializer(serializers.ModelSerializer):
             'content',
         )
 
+
 class MovieSerializer(serializers.ModelSerializer):
     director = DirectorSerializer(many=True, read_only=True)
     actors = ActorSerializer(many=True, read_only=True)
@@ -167,3 +168,11 @@ class MovieLikeSerializer(serializers.ModelSerializer):
     class Meta:
         model = MovieLike
         fields = ('user', )
+
+
+class MovieMyLikeSerializer(serializers.ModelSerializer):
+    movie = MovieSerializer(read_only=True)
+
+    class Meta:
+        model = MovieLike
+        fields = ('movie', )

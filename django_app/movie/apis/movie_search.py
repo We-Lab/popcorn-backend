@@ -58,6 +58,7 @@ class MovieSearch(APIView):
             serializer = MovieSerializer(movie, many=True)
             return Response(serializer.data)
 
+
 class MovieListView(generics.ListAPIView):
     serializer_class = MovieDetailSerializer
     permission_classes = (permissions.AllowAny,)
