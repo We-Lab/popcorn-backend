@@ -112,18 +112,20 @@ ALLOWED_HOSTS = [
 ]
 
 
-CORS_ORIGIN_WHITELIST = (
-    'google.com',
-    '192.168.0.197',
-    'localhost',
-    '127.0.0.1',
-    'popcorn-backend2-dev.ap-northeast-2.elasticbeanstalk.com',
-    '.django-test.com',
-    # 다음 크롤링
-    'movie.daum.net',
-    'apis.daum.net/contents/movie',
-    'videofarm.daum.net',
-)
+CORS_ORIGIN_ALLOW_ALL = True
+
+# CORS_ORIGIN_WHITELIST = (
+#     'google.com',
+#     '192.168.0.197',
+#     'localhost',
+#     '127.0.0.1',
+#     'popcorn-backend2-dev.ap-northeast-2.elasticbeanstalk.com',
+#     '.django-test.com',
+#     # 다음 크롤링
+#     'movie.daum.net',
+#     'apis.daum.net/contents/movie',
+#     'videofarm.daum.net',
+# )
 
 
 # Application definition

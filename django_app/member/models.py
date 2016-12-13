@@ -34,7 +34,7 @@ class MyUser(AbstractUser):
     REQUIRED_FIELDS = ('email', 'gender', 'date_of_birth', )
 
     def __str__(self):
-        return self.username
+        return self.nickname
 
     # phone_number '-' 삭제
     def save(self, *args, **kwargs):

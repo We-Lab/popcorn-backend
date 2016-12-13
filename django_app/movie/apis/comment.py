@@ -78,7 +78,10 @@ class CommentLikeView(generics.CreateAPIView):
 
     # post 요청시 좋아요 생성 또는 삭제
     def create(self, request, *args, **kwargs):
-        comment = Comment.objects.get(pk=kwargs['pk'])
+        try:
+            comment = Comment.objects.get(pk=kwargs['pk'])
+        except:
+            raise NotAcceptable('댓글이 존재하지 않습니다.')
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         comment_like_exist = CommentLike.objects.filter(user=request.user, comment=comment)
@@ -143,3 +146,19 @@ class MyCommentStarView(generics.RetrieveAPIView):
         user = self.request.user
         movie = self.kwargs['pk']
         return Comment.objects.get(author=user, movie=movie)
+
+
+class StarHistogram(APIView):
+    """
+    별점 분포도입니다.
+    dict type 이라 출력순서가 랜덤합니다.
+
+    """
+    def get(self, request, *args, **kwargs):
+        ret = {}
+        comment = Comment.objects.filter(movie=self.kwargs['pk'])
+        for i in range(11):
+            star = i * 0.5
+            comment_star = comment.filter(star=star)
+            ret[star] = len(comment_star)
+        return Response(ret)
