@@ -16,11 +16,12 @@ class CarouselMovieRecommend(APIView):
     """
     평점 최상위 10개중에 랜덤으로 2개 출력합니다.
     올해 영화만 출력합니다.
+    박스오피스에 없는 영화만 출력합니다.
     """
     def get(self, request, *args, **kwargs):
         now = datetime.datetime.now()
-        movie = Movie.objects.filter(created_year=now.year).order_by('-star_average')[:10]
-        movie_recommend = random.sample(set(movie), 3)
+        movies = Movie.objects.filter(boxofficemovie__isnull=True, created_year=now.year).order_by('-star_average')[:10]
+        movie_recommend = random.sample(set(movies), 3)
         serializer = MovieDetailSerializer(movie_recommend, many=True)
         return Response(serializer.data)
 
