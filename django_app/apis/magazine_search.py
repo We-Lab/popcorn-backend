@@ -46,4 +46,4 @@ def magazine_search():
                 else:
                     pass
         except:
-            pass:
+            pass
