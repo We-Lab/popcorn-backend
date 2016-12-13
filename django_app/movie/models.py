@@ -71,6 +71,7 @@ class Movie(BaseModel):
     making_country = models.ManyToManyField(MakingCountry)
     grade = models.ForeignKey(Grade)
     created_year = models.IntegerField(blank=True)
+    main_image_url = models.TextField()
     img_url = models.TextField()
     main_trailer = models.TextField()
     videos = models.TextField()
