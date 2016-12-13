@@ -48,16 +48,13 @@ def video_search(request):
     return video_trailer_url
 
 
-# def resize_image(request):
-#     index = 4
-#     image_split = request.rsplit('/', 5)
-#     replacement = ['R200x0.q99', 'R500x0.q99', 'R700x0.q99']
-#     movie_img_url = []
-#     for nums in range(3):
-#         image_split[index] = replacement[nums]
-#         movie_img_url.append('/'.join(image_split))
-#     return movie_img_url
-
+def main_image(movie_search, num):
+    title_link = movie_search.get("channel").get("item")[int(num)].get("title")[0].get("link")
+    image_response = requests.get(title_link)
+    bs_image = BeautifulSoup(image_response.text, "html.parser")
+    image_tag = bs_image.select('span.thumb_detail')[0]['style']
+    image_url = re.findall(r'\((.*)\)', image_tag)[0]
+    return image_url
 
 def resize_image(request):
     index = 4
@@ -116,8 +113,6 @@ def movie_search_func(keyword):
             pass
         else:
             print('save')
-            # title_eng = movie_search.get("channel").get("item")[int(num)].get("eng_title")[0].get("content")
-            # title_kor = movie_search.get("channel").get("item")[int(num)].get("title")[0].get("content")
             created_year = movie_search.get("channel").get("item")[int(num)].get("year")[0].get("content")
             run_time = movie_search.get("channel").get("item")[int(num)].get("open_info")[2].get("content")
             grade = movie_search.get("channel").get("item")[int(num)].get("open_info")[1].get("content")
@@ -125,9 +120,8 @@ def movie_search_func(keyword):
             sub_movie_images = resized_image_list_genorater(movie_search, num, 'photo')
             nation_list = list_genorater(movie_search, num, 'nation')
             genre_list = list_genorater(movie_search, num, 'genre')
-
-            title_link = movie_search.get("channel").get("item")[int(num)].get("title")[0].get("link")
             people_info = people(title_link)
+            main_image_url = main_image(movie_search, num)
 
             grade = Grade.objects.get_or_create(
                 content=grade,
@@ -140,6 +134,7 @@ def movie_search_func(keyword):
                 synopsis=synopsis,
                 grade=grade[0],
                 run_time=run_time,
+                main_image_url=main_image_url,
             )
 
             for photo in sub_movie_images:
