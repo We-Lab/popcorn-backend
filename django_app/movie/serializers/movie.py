@@ -126,6 +126,7 @@ class MovieDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = Movie
         fields = (
+            'id',
             'daum_id',
             'title_kor',
             'title_eng',
