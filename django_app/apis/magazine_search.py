@@ -34,7 +34,7 @@ def magazine_search():
                 for count in range(len(body)):
                     main_body = body[count].text
                     text.append(main_body)
-
+                text.append("출처 | {}".format(img_url))
                 mag_text = "\n".join(text)
                 if len(mag_text) > 20:
                     Magazine.objects.create(
