@@ -41,8 +41,8 @@ class MainMovieList(generics.ListAPIView):
 
 class FavoriteMovieRecommend(generics.ListAPIView):
     """
-    취향 선택시 선택지마다 평점 최상위 5개 영화를 뽑고,
-    뽑핀 영화 리스트에서 중복을 제거하고 5개를 랜덤으로 노출시킵니다.
+    취향 선택시 선택지마다 평점 최상위 6개 영화를 뽑고,
+    뽑핀 영화 리스트에서 중복을 제거하고 6개를 랜덤으로 노출시킵니다.
     """
     serializer_class = MovieSerializer
     permission_classes = (permissions.IsAuthenticated,)
@@ -54,22 +54,23 @@ class FavoriteMovieRecommend(generics.ListAPIView):
         making_countrys = self.request.user.favorite_making_country.all()
         favorite_recommend_movies = []
         for genre in genres:
-            movies = Movie.objects.filter(genre=genre).order_by('-star_average')[:5]
+            movies = Movie.objects.filter(genre=genre).order_by('-star_average')[:6]
             for movie in movies:
                 favorite_recommend_movies.append(movie)
         for grade in grades:
-            movies = Movie.objects.filter(grade=grade).order_by('-star_average')[:5]
+            movies = Movie.objects.filter(grade=grade).order_by('-star_average')[:6]
             for movie in movies:
                 favorite_recommend_movies.append(movie)
         for making_country in making_countrys:
-            movies = Movie.objects.filter(making_country=making_country).order_by('-star_average')[:5]
+            movies = Movie.objects.filter(making_country=making_country).order_by('-star_average')[:6]
             for movie in movies:
                 favorite_recommend_movies.append(movie)
+        # print(len(set(favorite_recommend_movies)))
         if len(set(favorite_recommend_movies)) == 0:
             raise NotAcceptable('취향을 선택해주세요.')
-        elif len(set(favorite_recommend_movies)) < 5:
+        elif len(set(favorite_recommend_movies)) < 12:
             raise NotAcceptable('취향을 더 선택해주세요.')
-        movie_recommend = random.sample(set(favorite_recommend_movies), 5)
+        movie_recommend = random.sample(set(favorite_recommend_movies), 6)
         return movie_recommend
 
 
