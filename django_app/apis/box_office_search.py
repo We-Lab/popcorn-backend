@@ -2,7 +2,7 @@ import re
 import requests
 from bs4 import BeautifulSoup
 
-from apis import movie_search
+from apis import movie_search_func
 from movie.models import BoxOfficeMovie, Movie
 
 
@@ -18,7 +18,7 @@ def box_office_search():
         movie_title = movie_title_list[i].text
         print(movie_title)
         try:
-            movie_search(movie_title)
+            movie_search_func(movie_title)
         except:
             pass
 
