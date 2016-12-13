@@ -56,6 +56,7 @@ def main_image(movie_search, num):
     image_url = re.findall(r'\((.*)\)', image_tag)[0]
     return image_url
 
+
 def resize_image(request):
     index = 4
     image_split = request.rsplit('/', 5)
@@ -112,85 +113,89 @@ def movie_search_func(keyword):
             print('search')
             pass
         else:
-            print('save')
-            created_year = movie_search.get("channel").get("item")[int(num)].get("year")[0].get("content")
-            run_time = movie_search.get("channel").get("item")[int(num)].get("open_info")[2].get("content")
-            grade = movie_search.get("channel").get("item")[int(num)].get("open_info")[1].get("content")
-            synopsis = movie_search.get("channel").get("item")[int(num)].get("story")[0].get("content")
-            sub_movie_images = resized_image_list_genorater(movie_search, num, 'photo')
-            nation_list = list_genorater(movie_search, num, 'nation')
-            genre_list = list_genorater(movie_search, num, 'genre')
-            people_info = people(title_link)
-            main_image_url = main_image(movie_search, num)
-
-            grade = Grade.objects.get_or_create(
-                content=grade,
-            )
-            movie = Movie.objects.create(
-                daum_id=daum_id[0],
-                title_kor=title_kor,
-                title_eng=title_eng,
-                created_year=created_year,
-                synopsis=synopsis,
-                grade=grade[0],
-                run_time=run_time,
-                main_image_url=main_image_url,
-            )
-
-            for photo in sub_movie_images:
-                MovieImages.objects.create(
-                    movie=movie,
-                    url=photo,
-                    )
-
             try:
-                specific_movie = Movie.objects.get(daum_id=daum_id[0])
-                trailer_link = movie_search.get("channel").get("item")[int(num)].get("trailer")[0].get("link")
-                main_trailer = video_search(trailer_link)
-                specific_movie.main_trailer = main_trailer
-                specific_movie.save()
+                print('save')
+                created_year = movie_search.get("channel").get("item")[int(num)].get("year")[0].get("content")
+                run_time = movie_search.get("channel").get("item")[int(num)].get("open_info")[2].get("content")
+                grade = movie_search.get("channel").get("item")[int(num)].get("open_info")[1].get("content")
+                synopsis = movie_search.get("channel").get("item")[int(num)].get("story")[0].get("content")
+                sub_movie_images = resized_image_list_genorater(movie_search, num, 'photo')
+                nation_list = list_genorater(movie_search, num, 'nation')
+                genre_list = list_genorater(movie_search, num, 'genre')
+                people_info = people(title_link)
+                main_image_url = main_image(movie_search, num)
 
-                img_url = movie_search.get("channel").get("item")[int(num)].get("thumbnail")[0].get("content")
-                main_img = resize_image(img_url)[0]
-                specific_movie.img_url = main_img
-                specific_movie.save()
+
+                grade = Grade.objects.get_or_create(
+                    content=grade,
+                )
+                movie = Movie.objects.create(
+                    daum_id=daum_id[0],
+                    title_kor=title_kor,
+                    title_eng=title_eng,
+                    created_year=created_year,
+                    synopsis=synopsis,
+                    grade=grade[0],
+                    run_time=run_time,
+                    main_image_url=main_image_url,
+                )
+
+                for photo in sub_movie_images:
+                    MovieImages.objects.create(
+                        movie=movie,
+                        url=photo,
+                        )
+
+                try:
+                    specific_movie = Movie.objects.get(daum_id=daum_id[0])
+                    trailer_link = movie_search.get("channel").get("item")[int(num)].get("trailer")[0].get("link")
+                    main_trailer = video_search(trailer_link)
+                    specific_movie.main_trailer = main_trailer
+                    specific_movie.save()
+
+                    img_url = movie_search.get("channel").get("item")[int(num)].get("thumbnail")[0].get("content")
+                    main_img = resize_image(img_url)[0]
+                    specific_movie.img_url = main_img
+                    specific_movie.save()
+                except:
+                    pass
+
+                for genres in genre_list:
+                    specific_movie = Movie.objects.get(daum_id=daum_id[0])
+                    genre = Genre.objects.get_or_create(
+                        content=genres,
+                    )
+                    specific_movie.genre.add(genre[0])
+
+                for nations in nation_list:
+                    specific_movie = Movie.objects.get(daum_id=daum_id[0])
+                    country = MakingCountry.objects.get_or_create(
+                        content=nations,
+                    )
+                    specific_movie.making_country.add(country[0])
+
+                for person in people_info:
+                    specific_movie = Movie.objects.get(daum_id=daum_id[0])
+                    if person['character_name'] == '감독':
+                        director = Director.objects.get_or_create(
+                            daum_id=person['daum_id'][0],
+                            name_eng=person['name_eng'],
+                            name_kor=person['name_kor'],
+                            profile_url=person['profile_url']
+                        )
+                        specific_movie.director.add(director[0])
+                    else:
+                        actors = Actor.objects.get_or_create(
+                            daum_id=person['daum_id'][0],
+                            name_eng=person['name_eng'],
+                            name_kor=person['name_kor'],
+                            profile_url=person['profile_url']
+                        )
+                        MovieActor.objects.get_or_create(
+                            movie=movie,
+                            actor=actors[0],
+                            character_name=person['character_name']
+                        )
             except:
                 pass
-
-            for genres in genre_list:
-                specific_movie = Movie.objects.get(daum_id=daum_id[0])
-                genre = Genre.objects.get_or_create(
-                    content=genres,
-                )
-                specific_movie.genre.add(genre[0])
-
-            for nations in nation_list:
-                specific_movie = Movie.objects.get(daum_id=daum_id[0])
-                country = MakingCountry.objects.get_or_create(
-                    content=nations,
-                )
-                specific_movie.making_country.add(country[0])
-
-            for person in people_info:
-                specific_movie = Movie.objects.get(daum_id=daum_id[0])
-                if person['character_name'] == '감독':
-                    director = Director.objects.get_or_create(
-                        daum_id=person['daum_id'][0],
-                        name_eng=person['name_eng'],
-                        name_kor=person['name_kor'],
-                        profile_url=person['profile_url']
-                    )
-                    specific_movie.director.add(director[0])
-                else:
-                    actors = Actor.objects.get_or_create(
-                        daum_id=person['daum_id'][0],
-                        name_eng=person['name_eng'],
-                        name_kor=person['name_kor'],
-                        profile_url=person['profile_url']
-                    )
-                    MovieActor.objects.get_or_create(
-                        movie=movie,
-                        actor=actors[0],
-                        character_name=person['character_name']
-                    )
     return title
