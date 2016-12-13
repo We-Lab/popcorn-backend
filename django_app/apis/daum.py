@@ -103,14 +103,14 @@ def movie_search_func(keyword):
     num_of_movies = movie_search.get("channel").get("totalCount")
     print('num_of_movies', num_of_movies)
     for num in range(num_of_movies):
-        print(num)
+        title_link = movie_search.get("channel").get("item")[int(num)].get("title")[0].get("link")
+        daum_id = re.findall(r'\d+', title_link)
         title_eng = movie_search.get("channel").get("item")[int(num)].get("eng_title")[0].get("content")
         title_kor = movie_search.get("channel").get("item")[int(num)].get("title")[0].get("content")
         title.append(title_kor)
         title.append(title_eng)
-        title_link = movie_search.get("channel").get("item")[int(num)].get("title")[0].get("link")
-        daum_id = re.findall(r'\d+', title_link)
         print('daum_id', daum_id)
+        print(Movie.objects.filter(daum_id=daum_id[0]).exists())
         if Movie.objects.filter(daum_id=daum_id[0]).exists():
             print('search')
             pass
@@ -122,7 +122,6 @@ def movie_search_func(keyword):
             run_time = movie_search.get("channel").get("item")[int(num)].get("open_info")[2].get("content")
             grade = movie_search.get("channel").get("item")[int(num)].get("open_info")[1].get("content")
             synopsis = movie_search.get("channel").get("item")[int(num)].get("story")[0].get("content")
-
             sub_movie_images = resized_image_list_genorater(movie_search, num, 'photo')
             nation_list = list_genorater(movie_search, num, 'nation')
             genre_list = list_genorater(movie_search, num, 'genre')
