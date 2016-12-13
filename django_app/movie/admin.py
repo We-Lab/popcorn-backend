@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from movie.models import Movie, MovieActor, Comment
+from movie.models import Movie, MovieActor, Comment, FamousLine
 
 
 class ActorInline(admin.TabularInline):
@@ -37,6 +37,24 @@ class CommentAdmin(admin.ModelAdmin):
         'like_users',
     ]
     list_display = ('author', 'movie', 'star', 'content')
-    search_fields = ['author__nickname', 'movie__title_kor']
+    search_fields = ['author__nickname', 'movie__title_kor', 'content']
     list_filter = ['star']
+
 admin.site.register(Comment, CommentAdmin)
+
+
+class FamousLineAdmin(admin.ModelAdmin):
+    fields = [
+        'author',
+        'movie',
+        'actor',
+        'content',
+        'like_users',
+    ]
+    readonly_fields = [
+        'like_users',
+    ]
+    list_display = ('author', 'movie', 'actor', 'actor_character_name', 'content')
+    search_fields = ['author__nickname', 'movie__title_kor', 'content']
+
+admin.site.register(FamousLine, FamousLineAdmin)
