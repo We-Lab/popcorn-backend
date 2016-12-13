@@ -1,3 +1,4 @@
+import datetime
 import random
 
 from rest_framework import generics
@@ -14,9 +15,11 @@ from mysite.utils.custom_pagination import LargeResultsSetPagination
 class CarouselMovieRecommend(APIView):
     """
     평점 최상위 10개중에 랜덤으로 2개 출력합니다.
+    올해 영화만 출력합니다.
     """
     def get(self, request, *args, **kwargs):
-        movie = Movie.objects.all().order_by('-star_average')[:10]
+        now = datetime.datetime.now()
+        movie = Movie.objects.filter(created_year=now.year).order_by('-star_average')[:10]
         movie_recommend = random.sample(set(movie), 3)
         serializer = MovieDetailSerializer(movie_recommend, many=True)
         return Response(serializer.data)
