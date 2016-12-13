@@ -70,16 +70,16 @@ class Movie(BaseModel):
     # 기타정보
     making_country = models.ManyToManyField(MakingCountry)
     grade = models.ForeignKey(Grade)
-    created_year = models.IntegerField(blank=True)
+    created_year = models.IntegerField()
     main_image_url = models.TextField()
     img_url = models.TextField()
     main_trailer = models.TextField()
     videos = models.TextField()
-    run_time = models.CharField(max_length=30, blank=True)
-    synopsis = models.TextField(blank=True)
+    run_time = models.CharField(max_length=30)
+    synopsis = models.TextField()
     # 옵션정보
     # accumulated_viewers = models.IntegerField(blank=True)
-    Release_date = models.CharField(max_length=30, blank=True)
+    # Release_date = models.CharField(max_length=30, blank=True)
     like_users = models.ManyToManyField(settings.AUTH_USER_MODEL, through='MovieLike', related_name='movie_set_like_users')
     comment_users = models.ManyToManyField(settings.AUTH_USER_MODEL, through='Comment', related_name='movie_set_comment_users')
 
