@@ -10,21 +10,21 @@ class Genre(models.Model):
     content = models.CharField(max_length=30, unique=True)
 
     def __str__(self):
-        return self.genre
+        return self.content
 
 
 class Grade(models.Model):
     content = models.CharField(max_length=30, unique=True)
 
     def __str__(self):
-        return self.grade
+        return self.content
 
 
 class MakingCountry(models.Model):
     content = models.CharField(max_length=30, unique=True)
 
     def __str__(self):
-        return self.making_country
+        return self.content
 
 
 class Actor(models.Model):
@@ -79,7 +79,7 @@ class Movie(BaseModel):
     synopsis = models.TextField(blank=True)
     # 옵션정보
     # accumulated_viewers = models.IntegerField(blank=True)
-    Release_date = models.CharField(max_length=30, blank=True)
+    # Release_date = models.CharField(max_length=30, blank=True)
     like_users = models.ManyToManyField(settings.AUTH_USER_MODEL, through='MovieLike', related_name='movie_set_like_users')
     comment_users = models.ManyToManyField(settings.AUTH_USER_MODEL, through='Comment', related_name='movie_set_comment_users')
 
