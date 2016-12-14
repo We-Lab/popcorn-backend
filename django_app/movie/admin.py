@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from movie.models import Movie, MovieActor, Comment, FamousLine
+from movie.models import Movie, MovieActor, Comment, FamousLine, BoxOfficeMovie, Magazine
 
 
 class ActorInline(admin.TabularInline):
@@ -18,9 +18,10 @@ class MovieAdmin(admin.ModelAdmin):
     ]
     readonly_fields = ['daum_id', 'star_average', 'star_sum', 'comment_count', 'like_users', 'comment_users']
     inlines = (ActorInline, )
-    list_display = ('title_kor', 'title_eng', 'created_year')
+    list_display = ('title_kor', 'title_eng', 'created_year', 'created')
     list_filter = ['genre', 'making_country', 'grade']
     search_fields = ['title_kor']
+    list_per_page = 10
 
 admin.site.register(Movie, MovieAdmin)
 
@@ -36,9 +37,10 @@ class CommentAdmin(admin.ModelAdmin):
     readonly_fields = [
         'like_users',
     ]
-    list_display = ('author', 'movie', 'star', 'content')
+    list_display = ('author', 'movie', 'star', 'content', 'created')
     search_fields = ['author__nickname', 'movie__title_kor', 'content']
     list_filter = ['star']
+    list_per_page = 10
 
 admin.site.register(Comment, CommentAdmin)
 
@@ -54,7 +56,35 @@ class FamousLineAdmin(admin.ModelAdmin):
     readonly_fields = [
         'like_users',
     ]
-    list_display = ('author', 'movie', 'actor', 'actor_character_name', 'content')
+    list_display = ('author', 'movie', 'actor', 'actor_character_name', 'content', 'created')
     search_fields = ['author__nickname', 'movie__title_kor', 'content']
+    list_per_page = 10
 
 admin.site.register(FamousLine, FamousLineAdmin)
+
+
+class BoxOfficeAdmin(admin.ModelAdmin):
+    fields = [
+        'rank',
+        'movie',
+        'release_date',
+        'ticketing_rate',
+    ]
+    list_display = ('rank', 'movie', 'release_date', 'ticketing_rate', 'created')
+    list_per_page = 10
+
+admin.site.register(BoxOfficeMovie, BoxOfficeAdmin)
+
+
+class MagazineAdmin(admin.ModelAdmin):
+    fields = [
+        'mag_id',
+        'title',
+        'content',
+        'img_url',
+    ]
+    list_display = ('title', 'created')
+    search_fields = ('mag_id', 'title')
+    list_per_page = 10
+
+admin.site.register(Magazine, MagazineAdmin)

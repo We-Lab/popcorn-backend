@@ -146,7 +146,7 @@ INSTALLED_APPS = [
 
     'allauth',
     'allauth.account',
-    'allauth.socialaccount',
+    # 'allauth.socialaccount',
 
     'rest_auth',
     'rest_auth.registration',
