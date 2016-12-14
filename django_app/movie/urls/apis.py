@@ -15,21 +15,21 @@ urlpatterns = [
     url(r'^list/', MovieListView.as_view(), name='movie_list'),
     # 영화상세
     url(r'^(?P<pk>[0-9]+)/$', MovieDetailView.as_view(), name='movie_detail'),
-    url(r'^(?P<pk>[0-9]+)/movie_like/', MovieLikeView.as_view(), name='comment_like'),
+    url(r'^(?P<pk>[0-9]+)/movie-like/', MovieLikeView.as_view(), name='comment_like'),
     # 영화평가
     url(r'^(?P<pk>[0-9]+)/comment/$', CommentView.as_view(), name='comment_list'),
     url(r'^(?P<pk>[0-9]+)/comment/histogram/$', StarHistogram.as_view(), name='star_histogram'),
     url(r'^(?P<pk>[0-9]+)/comment/top/$', TopCommentView.as_view(), name='comment_top'),
-    url(r'^(?P<pk>[0-9]+)/comment/my_star/$', MyCommentStarView.as_view(), name='comment_my_star'),
+    url(r'^(?P<pk>[0-9]+)/comment/my-star/$', MyCommentStarView.as_view(), name='comment_my_star'),
     url(r'^comment/(?P<pk>[0-9]+)/$', CommentDetailView.as_view(), name='comment_detail'),
-    url(r'^comment/(?P<pk>[0-9]+)/comment_like/', CommentLikeView.as_view(), name='comment_like'),
+    url(r'^comment/(?P<pk>[0-9]+)/comment-like/', CommentLikeView.as_view(), name='comment_like'),
     # 영화명대사
     url(r'^(?P<pk>[0-9]+)/famous/$', FamousLiseView.as_view(), name='famous_list'),
     url(r'^(?P<pk>[0-9]+)/famous/top/$', TopFamousView.as_view(), name='famous_top'),
     url(r'^famous/(?P<pk>[0-9]+)/$', FamousLineDetailView.as_view(), name='famous_line_detail'),
-    url(r'^famous/(?P<pk>[0-9]+)/famous_like/', FamousLikeView.as_view(), name='famous_like'),
+    url(r'^famous/(?P<pk>[0-9]+)/famous-like/', FamousLikeView.as_view(), name='famous_like'),
     # 매거진 리스트
     url(r'^magazine/', MagazineList.as_view(), name='magazine_list'),
     # 빠른 좋아요 페이지
-    url(r'^fast_like/$', MovieFastLike.as_view(), name='movie_fast_like'),
+    url(r'^fast-like/$', MovieFastLike.as_view(), name='movie_fast_like'),
 ]
