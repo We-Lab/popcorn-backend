@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from movie.models import Movie, MovieActor, Comment, FamousLine, BoxOfficeMovie
+from movie.models import Movie, MovieActor, Comment, FamousLine, BoxOfficeMovie, Magazine
 
 
 class ActorInline(admin.TabularInline):
@@ -74,3 +74,17 @@ class BoxOfficeAdmin(admin.ModelAdmin):
     list_per_page = 10
 
 admin.site.register(BoxOfficeMovie, BoxOfficeAdmin)
+
+
+class MagazineAdmin(admin.ModelAdmin):
+    fields = [
+        'mag_id',
+        'title',
+        'content',
+        'img_url',
+    ]
+    list_display = ('title', 'created')
+    search_fields = ('mag_id', 'title')
+    list_per_page = 10
+
+admin.site.register(Magazine, MagazineAdmin)
