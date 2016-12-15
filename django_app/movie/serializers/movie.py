@@ -174,3 +174,38 @@ class MovieMyLikeSerializer(serializers.ModelSerializer):
     class Meta:
         model = MovieLike
         fields = ('movie', )
+
+
+class BoxOfficeDetailSerializer(serializers.ModelSerializer):
+    image_set = MovieImageSerializer(many=True, read_only=True, source='movieimages_set')
+    genre = GenreSerializer(many=True, read_only=True)
+    grade = GradeSerializer(read_only=True)
+    making_country = MakingCountrySerializer(many=True, read_only=True)
+    star_average = serializers.ReadOnlyField()
+
+    class Meta:
+        model = Movie
+        fields = (
+            'id',
+            # 'daum_id',
+            'title_kor',
+            'title_eng',
+            'genre',
+            # 'director',
+            # 'actors',
+            'grade',
+            'making_country',
+            # 'created_year',
+            'img_url',
+            'main_image_url',
+            'run_time',
+            # 'synopsis',
+            'image_set',
+            'main_trailer',
+            # 'star_sum',
+            # 'comment_count',
+            'star_average',
+            # 'likes_count',
+            # 'like_users',
+            # 'comment_users',
+        )
