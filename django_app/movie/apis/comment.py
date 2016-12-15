@@ -1,6 +1,6 @@
 import random
-from operator import attrgetter
 
+from operator import attrgetter
 from django.db.models import Count
 from rest_framework import generics
 from rest_framework import permissions

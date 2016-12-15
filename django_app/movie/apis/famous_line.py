@@ -1,5 +1,4 @@
 from django.db.models import Count
-from django.http import Http404
 from rest_framework import generics
 from rest_framework import permissions
 from rest_framework import status
@@ -7,7 +6,6 @@ from rest_framework.exceptions import NotAcceptable
 from rest_framework.pagination import CursorPagination
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework.settings import api_settings
 
 from member.models import MyUser
 from movie.models import FamousLine, Movie, Actor, FamousLike

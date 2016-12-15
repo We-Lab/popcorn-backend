@@ -1,11 +1,6 @@
 from rest_framework import serializers
-from member.models import MyUser
-from movie.models import Movie, MovieImages, Actor, Director, Comment, FamousLine, Genre, Grade, MakingCountry, \
-    MovieLike
 
-
-# from movie.serializers.famous_line import FamousLineSerializer
-from movie.serializers.comment import MyCommentStarSerializer
+from movie.models import Movie, MovieImages, Actor, Director, Genre, Grade, MakingCountry, MovieLike
 
 
 class DirectorSerializer(serializers.ModelSerializer):
