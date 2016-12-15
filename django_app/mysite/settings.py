@@ -56,6 +56,8 @@ EMAIL_HOST_PASSWORD = email_config['EMAIL_HOST_PASSWORD']
 EMAIL_USE_TLS = email_config['EMAIL_USE_TLS']
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
+# Bad words
+BAD_WORDS = json.loads(open(os.path.join(CONF_DIR, 'bad_words.json'), encoding='utf8').read())
 
 
 #EMAIL
