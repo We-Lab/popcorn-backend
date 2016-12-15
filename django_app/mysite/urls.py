@@ -18,7 +18,7 @@ from django.contrib import admin
 
 from member.apis.mypage import MyComments, MyFamousLines, MyInfo, MyLikeMovie
 from member.views import ConfirmEmailView, PasswordResetView, PasswordResetConfirmView
-from movie.apis.box_office import BoxOfficeAPIView
+from movie.apis.box_office import BoxOfficeAPIView, BoxOfficeAPIViewIOS
 from movie.apis.comment import NewCommentAPIView, BestComment
 from movie.apis.favorites import GenreView, MakingCountryView, GradeView, UserFavorites
 from movie.apis.magazine import SampleMagazineAPIView
@@ -31,13 +31,14 @@ urlpatterns = [
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     # 메인페이지
     url(r'^main/box-office/$', BoxOfficeAPIView.as_view(), name='box_office'),
+    url(r'^main/box-office/ios/$', BoxOfficeAPIViewIOS.as_view(), name='box_office_ios'),
     url(r'^main/comments/$', NewCommentAPIView.as_view(), name='new_comments'),
     url(r'^main/magazines/$', SampleMagazineAPIView.as_view(), name='magazine_samples'),
     url(r'^main/movie-recommends/$', MainMovieList.as_view(), name='movie_recommends'),
     url(r'^main/movie-recommends/carousel/$', CarouselMovieRecommend().as_view(), name='carousel_movie_recommends'),
     url(r'^main/user-favorites/$', UserFavorites.as_view(), name='user_favorites'),
     url(r'^main/movie-recommends/favorites/$', FavoriteMovieRecommend.as_view(), name='movie_recommend_favorite'),
-    url(r'^main/movie-recommends/favorites/IOS/$', FavoriteMovieRecommendIOS.as_view(), name='movie_recommend_favorite'),
+    url(r'^main/movie-recommends/favorites/ios/$', FavoriteMovieRecommendIOS.as_view(), name='movie_recommend_favorite'),
     url(r'^main/best-comment/', BestComment.as_view(), name='best_comment'),
     # 취향페이지
     url(r'^favorite/genre/$', GenreView.as_view(), name='favorites_genre'),

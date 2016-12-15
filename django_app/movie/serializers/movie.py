@@ -209,3 +209,21 @@ class BoxOfficeDetailSerializer(serializers.ModelSerializer):
             # 'like_users',
             # 'comment_users',
         )
+
+
+class BoxOfficeDetailSerializerIOS(serializers.ModelSerializer):
+    """
+    IOS 용 박스오피스입니다.
+    """
+    grade = GradeSerializer(read_only=True)
+    star_average = serializers.ReadOnlyField()
+
+    class Meta:
+        model = Movie
+        fields = (
+            'id',
+            'grade',
+            'img_url',
+            'star_average',
+        )
+
