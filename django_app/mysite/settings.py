@@ -25,9 +25,9 @@ TEMPLATES_DIR = os.path.join(BASE_DIR, 'templates')
 # DEBUG
 STATIC_S3 = True
 
-en_name = os.environ.get('LOGNAME')
+en_name = 'pbh'
 
-if 'USER' in os.environ and os.environ['USER'] == en_name:
+if en_name in os.environ.get('LOGNAME',''):
     DEBUG = True
 else:
     DEBUG = False
@@ -153,7 +153,7 @@ INSTALLED_APPS = [
     'storages',
 
     # contrab
-    'django_crontab',
+    # 'django_crontab',
 
     'member',
     'movie',
