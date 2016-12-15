@@ -1,5 +1,4 @@
 from django.db.models import Count
-from django.http import Http404
 from rest_framework import generics
 from rest_framework import permissions
 from rest_framework import status
@@ -7,12 +6,12 @@ from rest_framework.exceptions import NotAcceptable
 from rest_framework.pagination import CursorPagination
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework.settings import api_settings
 
 from member.models import MyUser
 from movie.models import FamousLine, Movie, Actor, FamousLike
 from movie.permissions import IsOwnerOrReadOnly
 from movie.serializers.famous_line import FamousLineSerializer, FamousLikeSerializer
+from mysite.utils.profanities_filter import ProfanitiesFilter
 
 
 class FamousLiseView(generics.ListCreateAPIView):
@@ -34,7 +33,12 @@ class FamousLiseView(generics.ListCreateAPIView):
         a2 = Actor.objects.get(pk=self.request.data['actor'])
         if a2 not in [i for i in a1]:
             raise NotAcceptable('해당 배우를 찾을 수 없습니다.')
-        serializer.save(movie=movie, actor=a2, author=author)
+        # 욕설 필터링 시작
+        content = self.request.data['content']
+        r = ProfanitiesFilter()
+        clean_content = r.clean(content)
+        # 욕설 필터링 끝
+        serializer.save(movie=movie, actor=a2, author=author, content=clean_content)
 
 
 class FamousLineDetailView(generics.RetrieveUpdateDestroyAPIView):

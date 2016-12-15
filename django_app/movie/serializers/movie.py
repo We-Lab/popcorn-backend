@@ -1,11 +1,6 @@
 from rest_framework import serializers
-from member.models import MyUser
-from movie.models import Movie, MovieImages, Actor, Director, Comment, FamousLine, Genre, Grade, MakingCountry, \
-    MovieLike
 
-
-# from movie.serializers.famous_line import FamousLineSerializer
-from movie.serializers.comment import MyCommentStarSerializer
+from movie.models import Movie, MovieImages, Actor, Director, Genre, Grade, MakingCountry, MovieLike
 
 
 class DirectorSerializer(serializers.ModelSerializer):
@@ -179,3 +174,56 @@ class MovieMyLikeSerializer(serializers.ModelSerializer):
     class Meta:
         model = MovieLike
         fields = ('movie', )
+
+
+class BoxOfficeDetailSerializer(serializers.ModelSerializer):
+    image_set = MovieImageSerializer(many=True, read_only=True, source='movieimages_set')
+    genre = GenreSerializer(many=True, read_only=True)
+    grade = GradeSerializer(read_only=True)
+    making_country = MakingCountrySerializer(many=True, read_only=True)
+    star_average = serializers.ReadOnlyField()
+
+    class Meta:
+        model = Movie
+        fields = (
+            'id',
+            # 'daum_id',
+            'title_kor',
+            'title_eng',
+            'genre',
+            # 'director',
+            # 'actors',
+            'grade',
+            'making_country',
+            # 'created_year',
+            'img_url',
+            'main_image_url',
+            'run_time',
+            # 'synopsis',
+            'image_set',
+            'main_trailer',
+            # 'star_sum',
+            # 'comment_count',
+            'star_average',
+            # 'likes_count',
+            # 'like_users',
+            # 'comment_users',
+        )
+
+
+class BoxOfficeDetailSerializerIOS(serializers.ModelSerializer):
+    """
+    IOS 용 박스오피스입니다.
+    """
+    grade = GradeSerializer(read_only=True)
+    star_average = serializers.ReadOnlyField()
+
+    class Meta:
+        model = Movie
+        fields = (
+            'id',
+            'grade',
+            'img_url',
+            'star_average',
+        )
+

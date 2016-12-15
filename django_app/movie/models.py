@@ -3,7 +3,6 @@ from django.db import models
 
 from mysite import settings
 from mysite.utils.models import BaseModel
-from django.core.validators import MaxValueValidator, MinValueValidator
 
 
 class Genre(models.Model):

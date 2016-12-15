@@ -1,6 +1,6 @@
 import random
-from operator import attrgetter
 
+from operator import attrgetter
 from django.db.models import Count
 from rest_framework import generics
 from rest_framework import permissions
@@ -14,6 +14,7 @@ from member.models import MyUser
 from movie.models import Comment, Movie, CommentLike, BoxOfficeMovie
 from movie.permissions import IsOwnerOrReadOnly
 from movie.serializers.comment import CommentSerializer, CommentLikeSerializer, MyCommentStarSerializer
+from mysite.utils.profanities_filter import ProfanitiesFilter
 
 
 class CommentView(generics.ListCreateAPIView):
@@ -28,9 +29,14 @@ class CommentView(generics.ListCreateAPIView):
     def perform_create(self, serializer):
         movie = Movie.objects.get(pk=self.kwargs['pk'])
         author = MyUser.objects.get(pk=self.request.user.pk)
+        # 욕설 필터링 시작
+        content = self.request.data['content']
+        r = ProfanitiesFilter()
+        clean_content = r.clean(content)
+        # 욕설 필터링 끝
         if Comment.objects.filter(movie=movie, author=author).exists():
             raise NotAcceptable('이미 코멘트를 작성했습니다')
-        serializer.save(movie=movie, author=author)
+        serializer.save(movie=movie, author=author, content=clean_content)
         movie.comment_count += 1
         new_star = float(self.request.data['star'])
         movie.star_sum += new_star

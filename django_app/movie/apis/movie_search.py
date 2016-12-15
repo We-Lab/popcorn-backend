@@ -4,8 +4,9 @@ from rest_framework import status
 from rest_framework.exceptions import NotAcceptable
 from rest_framework.pagination import CursorPagination
 from rest_framework.views import APIView
-from movie.models import Movie, MovieLike
 from rest_framework.response import Response
+
+from movie.models import Movie, MovieLike
 from apis.daum import movie_search_func
 from movie.serializers.movie import MovieDetailSerializer, MovieSerializer, MovieLikeSerializer
 
