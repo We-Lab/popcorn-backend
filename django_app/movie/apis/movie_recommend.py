@@ -7,8 +7,8 @@ from rest_framework.exceptions import NotAcceptable
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from movie.models import Movie, Genre
-from movie.serializers.movie import MovieSerializer, MovieDetailSerializer
+from movie.models import Movie
+from movie.serializers.movie import MovieSerializer, MovieDetailSerializer, RelatedMovieSerializer
 from mysite.utils.custom_pagination import LargeResultsSetPagination
 
 
@@ -176,5 +176,5 @@ class RelatedMovieView(APIView):
         if len(series) != 0:
             final_list = series + final_list
             final_list = final_list[:4]
-        serializer = MovieDetailSerializer(final_list, many=True)
+        serializer = RelatedMovieSerializer(final_list, many=True)
         return Response(serializer.data)

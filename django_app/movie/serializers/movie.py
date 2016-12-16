@@ -227,3 +227,16 @@ class BoxOfficeDetailSerializerIOS(serializers.ModelSerializer):
             'star_average',
         )
 
+
+class RelatedMovieSerializer(serializers.ModelSerializer):
+    star_average = serializers.ReadOnlyField()
+
+    class Meta:
+        model = Movie
+        fields = (
+            'id',
+            'title_kor',
+            'title_eng',
+            'img_url',
+            'star_average',
+        )
