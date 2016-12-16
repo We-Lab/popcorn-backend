@@ -119,6 +119,7 @@ class RelatedMovieView(APIView):
     * base list: 겹치는 장르 존재하는 영화 중 별점 상위 30개
 
     * 리스트업 기준점수 및 가중치 기준 (각 항목별로 5~1점 부여, 최종 점수는 가중치를 곱해서 합산함)
+    0. 시리즈: 시리즈물은 최 우선순위로 노출
     1. 개봉연도: 올해 / 1년전 / 2년전 / 3년전 / 4년전 (가중치: *1)
     2. 평균별점: 4.50이상 / 4.49~4.00 / 3.99~3.50 / 3.49~3.00 / 2.99~2.50 (가중치: *5)
     3. 영화좋아요: 10개이상 / 8 / 6 / 4 / 2 (가중치: *10)
@@ -128,14 +129,24 @@ class RelatedMovieView(APIView):
     """
     def get(self, request, *args, **kwargs):
         benchmark_movie = Movie.objects.get(pk=self.kwargs['pk'])
+
+        # 시리즈 확인
+        benchmark_movie_title = benchmark_movie.title_kor
+        hash_kor = benchmark_movie_title.split()[0]
+        series = Movie.objects.exclude(pk=self.kwargs['pk']).filter(title_kor__startswith=hash_kor)
+        series = list(series)
+
+        # 1차 장르필터
         benchmark_movie_genre = benchmark_movie.genre.all()
         base_movie_list = []
 
-        # 1차 장르필터
         for genre in benchmark_movie_genre:
-            movies = Movie.objects.filter(genre=genre).order_by('-star_average')[:30]
+            movies = Movie.objects.exclude(pk=self.kwargs['pk']).filter(genre=genre).order_by('-star_average')[:30]
             for movie in movies:
-                base_movie_list.append(movie)
+                if movie in series:
+                    pass
+                else:
+                    base_movie_list.append(movie)
         base_movie_list_set = set(base_movie_list)
         related_movie_list = []
 
@@ -148,7 +159,7 @@ class RelatedMovieView(APIView):
             a = movie.score_created_year
             b = movie.score_star_average
             c = movie.score_like_users
-            print(movie.pk, movie, a, b, c)
+            # print(movie.pk, movie, a, b, c)
             related_movie_list.append((movie, a*year_weight + b*star_weight + c*like_weight))
         related_movie_list.sort(key=lambda tup: tup[1], reverse=True)
 
@@ -160,5 +171,10 @@ class RelatedMovieView(APIView):
         final_list = []
         for movie_tup in related_random_four:
             final_list.append(movie_tup[0])
+
+        # 시리즈가 있으면 우선순위로 출력
+        if len(series) != 0:
+            final_list = series + final_list
+            final_list = final_list[:4]
         serializer = MovieDetailSerializer(final_list, many=True)
         return Response(serializer.data)
