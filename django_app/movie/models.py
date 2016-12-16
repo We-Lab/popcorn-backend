@@ -1,6 +1,5 @@
 from django.db import models
 
-
 from mysite import settings
 from mysite.utils.models import BaseModel
 
@@ -88,6 +87,46 @@ class Movie(BaseModel):
     @property
     def likes_count(self):
         return self.movielike_set.count()
+
+    @property
+    def score_created_year(self):
+        import datetime
+        current_year = datetime.datetime.now().year
+        year = self.created_year
+        base_score = 5
+        while base_score > 0:
+            if year == current_year:
+                return base_score
+            else:
+                current_year -= 1
+                base_score -= 1
+        return base_score
+
+    @property
+    def score_star_average(self):
+        star_average = self.star_average
+        base_score = 5
+        star_evaluation = 5.0
+        while base_score > 0:
+            if star_average == star_evaluation:
+                return base_score
+            else:
+                base_score -= 1
+                star_evaluation -= 0.5
+        return base_score
+
+    @property
+    def score_like_users(self):
+        like_users = len(self.like_users.all())
+        base_score = 5
+        like_users_evaluation = 10
+        while base_score > 0:
+            if like_users >= like_users_evaluation:
+                return base_score
+            else:
+                base_score -= 1
+                like_users_evaluation -= 2
+        return base_score
 
 
 class MovieImages(models.Model):

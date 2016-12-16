@@ -7,7 +7,7 @@ from rest_framework.exceptions import NotAcceptable
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from movie.models import Movie
+from movie.models import Movie, Genre
 from movie.serializers.movie import MovieSerializer, MovieDetailSerializer
 from mysite.utils.custom_pagination import LargeResultsSetPagination
 
@@ -113,3 +113,52 @@ class FavoriteMovieRecommendIOS(generics.ListAPIView):
         movie_recommend = random.sample(set(favorite_recommend_movies), 20)
         return movie_recommend
 
+
+class RelatedMovieView(APIView):
+    """
+    * base list: 겹치는 장르 존재하는 영화 중 별점 상위 30개
+
+    * 리스트업 기준점수 및 가중치 기준 (각 항목별로 5~1점 부여, 최종 점수는 가중치를 곱해서 합산함)
+    1. 개봉연도: 올해 / 1년전 / 2년전 / 3년전 / 4년전 (가중치: *1)
+    2. 평균별점: 4.50이상 / 4.49~4.00 / 3.99~3.50 / 3.49~3.00 / 2.99~2.50 (가중치: *5)
+    3. 영화좋아요: 10개이상 / 8 / 6 / 4 / 2 (가중치: *10)
+
+    * return: 점수 상위 10개중 랜덤 4개 점수 내림차순으로 출력
+
+    """
+    def get(self, request, *args, **kwargs):
+        benchmark_movie = Movie.objects.get(pk=self.kwargs['pk'])
+        benchmark_movie_genre = benchmark_movie.genre.all()
+        base_movie_list = []
+
+        # 1차 장르필터
+        for genre in benchmark_movie_genre:
+            movies = Movie.objects.filter(genre=genre).order_by('-star_average')[:30]
+            for movie in movies:
+                base_movie_list.append(movie)
+        base_movie_list_set = set(base_movie_list)
+        related_movie_list = []
+
+        # 2차 가중치 필터
+        year_weight = 1
+        star_weight = 5
+        like_weight = 10
+
+        for movie in base_movie_list_set:
+            a = movie.score_created_year
+            b = movie.score_star_average
+            c = movie.score_like_users
+            print(movie.pk, movie, a, b, c)
+            related_movie_list.append((movie, a*year_weight + b*star_weight + c*like_weight))
+        related_movie_list.sort(key=lambda tup: tup[1], reverse=True)
+
+        # 3랜덤 필터
+        related_random_four = random.sample(set(related_movie_list), 4)
+        related_random_four.sort(key=lambda tup: tup[1], reverse=True)
+
+        # 리스트 출력
+        final_list = []
+        for movie_tup in related_random_four:
+            final_list.append(movie_tup[0])
+        serializer = MovieDetailSerializer(final_list, many=True)
+        return Response(serializer.data)
