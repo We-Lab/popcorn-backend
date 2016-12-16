@@ -6,6 +6,7 @@ from movie.apis.famous_line import FamousLikeView, TopFamousView, FamousLiseView
     FamousLineDetailView
 from movie.apis.magazine import MagazineList
 from movie.apis.movie_fast_like import MovieFastLike
+from movie.apis.movie_recommend import RelatedMovieView
 from movie.apis.movie_search import MovieSearch, MovieListView, MovieDetailView, MovieLikeView
 
 urlpatterns = [
@@ -16,6 +17,7 @@ urlpatterns = [
     # 영화상세
     url(r'^(?P<pk>[0-9]+)/$', MovieDetailView.as_view(), name='movie_detail'),
     url(r'^(?P<pk>[0-9]+)/movie-like/', MovieLikeView.as_view(), name='comment_like'),
+    url(r'^(?P<pk>[0-9]+)/related/', RelatedMovieView.as_view(), name='related_movies'),
     # 영화평가
     url(r'^(?P<pk>[0-9]+)/comment/$', CommentView.as_view(), name='comment_list'),
     url(r'^(?P<pk>[0-9]+)/comment/histogram/$', StarHistogram.as_view(), name='star_histogram'),

@@ -157,14 +157,14 @@ class MyCommentStarView(generics.RetrieveAPIView):
 class StarHistogram(APIView):
     """
     별점 분포도입니다.
-    dict type 이라 출력순서가 랜덤합니다.
 
     """
     def get(self, request, *args, **kwargs):
-        ret = {}
+        # ret = {}
         comment = Comment.objects.filter(movie=self.kwargs['pk'])
-        for i in range(11):
-            star = i * 0.5
-            comment_star = comment.filter(star=star)
-            ret[star] = len(comment_star)
-        return Response(ret)
+        comment_histogram = comment.values('star').annotate(count=Count('star')).order_by('-star')
+        # for i in range(11):
+        #     star = i * 0.5
+        #     comment_star = comment.filter(star=star)
+        #     ret[star] = len(comment_star)
+        return Response(comment_histogram)
