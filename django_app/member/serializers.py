@@ -7,10 +7,11 @@ from member.models import MyUser
 
 
 class RegistrationSerializer(RegisterSerializer):
-    nickname = serializers.CharField(required=True)
+    username = serializers.RegexField(regex='^([a-zA-Z0-9]){4,10}$', required=True, help_text='영어/숫자 사용가능 4~10자')
+    nickname = serializers.RegexField(regex='^([가-힣a-zA-Z0-9]){4,10}$', required=True, help_text='한글/영어/숫자 사용가능 4~10자')
     gender = serializers.CharField(required=True)
     date_of_birth = serializers.DateField(required=True)
-    phone_number = serializers.CharField(required=False)
+    phone_number = serializers.RegexField(regex='^([0-9]){10,13}$', required=False, help_text='"-" 없이 숫자만 기입가능')
     profile_img = serializers.ImageField(required=False)
 
     def get_cleaned_data(self):
