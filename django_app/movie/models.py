@@ -79,14 +79,15 @@ class Movie(BaseModel):
     # accumulated_viewers = models.IntegerField(blank=True)
     # Release_date = models.CharField(max_length=30, blank=True)
     like_users = models.ManyToManyField(settings.AUTH_USER_MODEL, through='MovieLike', related_name='movie_set_like_users')
+    likes_count = models.IntegerField(default=0)
     comment_users = models.ManyToManyField(settings.AUTH_USER_MODEL, through='Comment', related_name='movie_set_comment_users')
 
     def __str__(self):
         return self.title_kor
 
-    @property
-    def likes_count(self):
-        return self.movielike_set.count()
+    # @property
+    # def likes_count(self):
+    #     return self.movielike_set.count()
 
     @property
     def score_created_year(self):

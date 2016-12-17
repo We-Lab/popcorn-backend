@@ -92,9 +92,14 @@ class MovieLikeView(generics.CreateAPIView):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         movie_like_exist = MovieLike.objects.filter(user=request.user, movie=movie)
+
         if movie_like_exist.exists():
             movie_like_exist.delete()
+            movie.likes_count -= 1
+            movie.save()
             return Response(serializer.errors, status=status.HTTP_306_RESERVED)
         serializer.save(movie=movie, user=request.user)
+        movie.likes_count += 1
+        movie.save()
         headers = self.get_success_headers(serializer.data)
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
