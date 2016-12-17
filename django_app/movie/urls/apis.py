@@ -6,7 +6,7 @@ from movie.apis.famous_line import FamousLikeView, TopFamousView, FamousLiseView
     FamousLineDetailView
 from movie.apis.magazine import MagazineList
 from movie.apis.movie_fast_like import MovieFastLike
-from movie.apis.movie_rank import StarRankView
+from movie.apis.movie_rank import StarRankView, LikeRankView
 from movie.apis.movie_recommend import RelatedMovieView
 from movie.apis.movie_search import MovieSearch, MovieListView, MovieDetailView, MovieLikeView
 
@@ -37,4 +37,5 @@ urlpatterns = [
     url(r'^fast-like/$', MovieFastLike.as_view(), name='movie_fast_like'),
     # 랭킹
     url(r'^star-rank/$', StarRankView.as_view(), name='star_rank'),
+    url(r'^like-rank/$', LikeRankView.as_view(), name='like_rank'),
 ]
