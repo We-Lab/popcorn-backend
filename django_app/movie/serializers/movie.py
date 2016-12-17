@@ -1,6 +1,10 @@
 from rest_framework import serializers
 
-from movie.models import Movie, MovieImages, Actor, Director, Genre, Grade, MakingCountry, MovieLike
+from movie.models import Movie, MovieImages, Actor, Director, Genre, Grade, MakingCountry, MovieLike, MovieActor
+
+################################################################################
+# 감독, 배우 시리얼라이저                                                           #
+################################################################################
 
 
 class DirectorSerializer(serializers.ModelSerializer):
@@ -44,6 +48,18 @@ class ActorDetailSerializer(serializers.ModelSerializer):
         )
 
 
+class CharacterNameSerializer(serializers.ModelSerializer):
+    actor = ActorDetailSerializer()
+
+    class Meta:
+        model = MovieActor
+        fields = ('actor', 'character_name')
+
+################################################################################
+# 영화 이미지, 장르, 관람등급, 국가 시리얼라이저                                          #
+################################################################################
+
+
 class MovieImageSerializer(serializers.ModelSerializer):
     class Meta:
         model = MovieImages
@@ -80,6 +96,10 @@ class MakingCountrySerializer(serializers.ModelSerializer):
             'content',
         )
 
+################################################################################
+# 영화 시리얼라이저                                                                #
+################################################################################
+
 
 class MovieSerializer(serializers.ModelSerializer):
     director = DirectorSerializer(many=True, read_only=True)
@@ -113,7 +133,7 @@ class MovieSerializer(serializers.ModelSerializer):
 class MovieDetailSerializer(serializers.ModelSerializer):
     image_set = MovieImageSerializer(many=True, read_only=True, source='movieimages_set')
     director = DirectorDetailSerializer(many=True, read_only=True)
-    actors = ActorDetailSerializer(many=True, read_only=True)
+    actors = CharacterNameSerializer(source='movieactor_set', many=True)
     genre = GenreSerializer(many=True, read_only=True)
     grade = GradeSerializer(read_only=True)
     making_country = MakingCountrySerializer(many=True, read_only=True)
@@ -159,6 +179,10 @@ class MovieDetailSerializer(serializers.ModelSerializer):
                     ret['is_comment'] = True
         return ret
 
+################################################################################
+# 영화 좋아요 시리얼라이저                                                           #
+################################################################################
+
 
 class MovieLikeSerializer(serializers.ModelSerializer):
     user = serializers.StringRelatedField(read_only=True)
@@ -174,6 +198,10 @@ class MovieMyLikeSerializer(serializers.ModelSerializer):
     class Meta:
         model = MovieLike
         fields = ('movie', )
+
+################################################################################
+# 박스오피스 시리얼라이저                                                            #
+################################################################################
 
 
 class BoxOfficeDetailSerializer(serializers.ModelSerializer):
@@ -226,6 +254,10 @@ class BoxOfficeDetailSerializerIOS(serializers.ModelSerializer):
             'img_url',
             'star_average',
         )
+
+################################################################################
+# 연관영화 시리얼라이저                                                             #
+################################################################################
 
 
 class RelatedMovieSerializer(serializers.ModelSerializer):
