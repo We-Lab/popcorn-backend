@@ -103,7 +103,8 @@ class TopCommentView(APIView):
     # django Aggregation API 활용
     # 참조: https://docs.djangoproject.com/en/1.10/topics/db/aggregation/
     def get(self, request, *args, **kwargs):
-        top_comment = Comment.objects.annotate(num_likes=Count('like_users')).order_by('-num_likes')[:3]
+        comments = Comment.objects.filter(movie=self.kwargs['pk'])
+        top_comment = comments.annotate(num_likes=Count('like_users')).order_by('-num_likes')[:3]
         serializer = CommentSerializer(top_comment, many=True)
         return Response(serializer.data)
 
