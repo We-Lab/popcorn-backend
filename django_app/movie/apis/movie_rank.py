@@ -1,19 +1,17 @@
-from rest_framework.response import Response
-from rest_framework.views import APIView
+from rest_framework import generics
 
 from movie.models import Movie
-from movie.serializers.movie import MovieDetailSerializer
+from movie.serializers.movie_rank import RankSerializer
+from mysite.utils.custom_pagination import RankResultsSetPagination
 
 
-class StarRankView(APIView):
-    def get(self, request, *args, **kwargs):
-        movie = Movie.objects.all().order_by('-star_average')[:20]
-        serializer = MovieDetailSerializer(movie, many=True)
-        return Response(serializer.data)
+class StarRankView(generics.ListAPIView):
+    serializer_class = RankSerializer
+    pagination_class = RankResultsSetPagination
+    queryset = Movie.objects.order_by('-star_average')[:60]
 
 
-class LikeRankView(APIView):
-    def get(self, request, *args, **kwargs):
-        movie = Movie.objects.all().order_by('-likes_count')[:20]
-        serializer = MovieDetailSerializer(movie, many=True)
-        return Response(serializer.data)
+class LikeRankView(generics.ListAPIView):
+    serializer_class = RankSerializer
+    pagination_class = RankResultsSetPagination
+    queryset = Movie.objects.order_by('-likes_count')[:60]
