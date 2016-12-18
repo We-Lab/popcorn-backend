@@ -108,7 +108,7 @@ class FavoriteMovieRecommendIOS(generics.ListAPIView):
         # print(favorite_recommend_movies)
         if len(set(favorite_recommend_movies)) == 0:
             raise NotAcceptable('취향을 선택해주세요.')
-        elif len(set(favorite_recommend_movies)) < 20:
+        elif len(set(favorite_recommend_movies)) < 40:
             raise NotAcceptable('취향을 더 선택해주세요.')
         movie_recommend = random.sample(set(favorite_recommend_movies), 20)
         return movie_recommend
