@@ -84,6 +84,7 @@ class TopFamousView(APIView):
     # django Aggregation API 활용
     # 참조: https://docs.djangoproject.com/en/1.10/topics/db/aggregation/
     def get(self, request, *args, **kwargs):
-        top_comment = FamousLine.objects.annotate(num_likes=Count('like_users')).order_by('-num_likes')[:3]
+        famous_lines = FamousLine.objects.filter(movie=self.kwargs['pk'])
+        top_comment = famous_lines.annotate(num_likes=Count('like_users')).order_by('-num_likes')[:3]
         serializer = FamousLineSerializer(top_comment, many=True)
         return Response(serializer.data)
