@@ -30,9 +30,12 @@ class CommentView(generics.ListCreateAPIView):
         movie = Movie.objects.get(pk=self.kwargs['pk'])
         author = MyUser.objects.get(pk=self.request.user.pk)
         # 욕설 필터링 시작
-        content = self.request.data['content']
-        r = ProfanitiesFilter()
-        clean_content = r.clean(content)
+        try:
+            content = self.request.data['content']
+            r = ProfanitiesFilter()
+            clean_content = r.clean(content)
+        except:
+            clean_content = ''
         # 욕설 필터링 끝
         if Comment.objects.filter(movie=movie, author=author).exists():
             raise NotAcceptable('이미 코멘트를 작성했습니다')
