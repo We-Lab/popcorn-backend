@@ -66,6 +66,7 @@ class MyInfoSerializer(serializers.ModelSerializer):
     class Meta:
         model = MyUser
         fields = (
+            'id',
             'nickname',
             'profile_img',
         )
