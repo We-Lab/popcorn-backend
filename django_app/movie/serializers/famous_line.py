@@ -16,6 +16,7 @@ class FamousLineSerializer(serializers.ModelSerializer):
             'actor',
             'actor_kor_name',
             'actor_character_name',
+            'actor_img_url',
             'author',
             'content',
             'likes_count',
