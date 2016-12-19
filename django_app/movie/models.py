@@ -222,6 +222,10 @@ class FamousLine(BaseModel):
     def actor_character_name(self):
         return MovieActor.objects.get(movie=self.movie, actor=self.actor).character_name
 
+    @property
+    def actor_img_url(self):
+        return Actor.objects.get(id=self.actor.pk).profile_url
+
 
 class FamousLike(BaseModel):
     famous_line = models.ForeignKey(FamousLine)
