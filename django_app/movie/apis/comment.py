@@ -57,17 +57,26 @@ class CommentDetailView(generics.RetrieveUpdateDestroyAPIView):
         instance = serializer.instance
         movie_pk = instance.movie.pk
         movie = Movie.objects.get(pk=movie_pk)
+        # 욕 필터링 시작
+        try:
+            content = self.request.data['content']
+            r = ProfanitiesFilter()
+            clean_content = r.clean(content)
+        except:
+            clean_content = serializer.instance.content
+        # 욕 필터링 끝
         old_star = instance.star
         new_star = float(self.request.data['star'])
+
         if old_star == new_star:
-            serializer.save()
+            serializer.save(content=clean_content)
         else:
             movie.star_sum -= old_star
             movie.star_sum += new_star
             # 평점 계산
             movie.star_average = ((movie.star_average * movie.comment_count) - old_star + new_star) / movie.comment_count
             movie.save()
-            serializer.save()
+            serializer.save(content=clean_content)
 
     def perform_destroy(self, instance):
         movie_pk = instance.movie.pk
