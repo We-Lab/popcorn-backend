@@ -53,7 +53,7 @@ class CharacterNameSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = MovieActor
-        fields = ('actor', 'character_name')
+        fields = ('actor', 'character_name',)
 
 ################################################################################
 # 영화 이미지, 장르, 관람등급, 국가 시리얼라이저                                          #
@@ -133,7 +133,7 @@ class MovieSerializer(serializers.ModelSerializer):
 class MovieDetailSerializer(serializers.ModelSerializer):
     image_set = MovieImageSerializer(many=True, read_only=True, source='movieimages_set')
     director = DirectorDetailSerializer(many=True, read_only=True)
-    actors = CharacterNameSerializer(source='movieactor_set', many=True)
+    actors = serializers.SerializerMethodField()
     genre = GenreSerializer(many=True, read_only=True)
     grade = GradeSerializer(read_only=True)
     making_country = MakingCountrySerializer(many=True, read_only=True)
@@ -178,6 +178,12 @@ class MovieDetailSerializer(serializers.ModelSerializer):
                 if instance.comment_users.filter(id=request.user.pk).exists():
                     ret['is_comment'] = True
         return ret
+
+    def get_actors(self, obj):
+        actors = MovieActor.objects.filter(movie=obj.pk).order_by('id')
+        serializers = CharacterNameSerializer(actors, many=True)
+        return serializers.data
+
 
 ################################################################################
 # 영화 좋아요 시리얼라이저                                                           #
