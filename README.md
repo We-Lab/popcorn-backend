@@ -1,6 +1,6 @@
 # Popcorn project API Document
 
-##[gitbook에서 Document 자세히 보기](https://popcorn_api.gitbooks.io/popcorn_api/content/)
+##[gitbook에서 Document 자세히 보기](https://pop-api.gitbooks.io/popcorn-api/content/)
 
 #### 개요
 
