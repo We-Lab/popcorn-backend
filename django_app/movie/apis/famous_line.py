@@ -53,9 +53,17 @@ class FamousLineDetailView(generics.RetrieveUpdateDestroyAPIView):
         movie_pk = famous_line.movie.pk
         actors = Actor.objects.filter(movie=movie_pk)
         actor = Actor.objects.get(pk=self.request.data['actor'])
+        # 욕 필터링 시작
+        try:
+            content = self.request.data['content']
+            r = ProfanitiesFilter()
+            clean_content = r.clean(content)
+        except:
+            clean_content = serializer.instance.content
+        # 욕 필터링 끝
         if actor not in [i for i in actors]:
             raise NotAcceptable('해당 배우를 찾을 수 없습니다.')
-        serializer.save()
+        serializer.save(content=clean_content)
 
 
 class FamousLikeView(generics.CreateAPIView):
