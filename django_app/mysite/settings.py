@@ -111,6 +111,7 @@ ALLOWED_HOSTS = [
     '127.0.0.1',
     'popcorn-backend2-dev.ap-northeast-2.elasticbeanstalk.com',
     '.django-test.com',
+    '.django-api.com',
 ]
 
 
