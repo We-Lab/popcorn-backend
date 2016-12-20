@@ -20,7 +20,7 @@ from member.apis.mypage import MyComments, MyFamousLines, MyInfo, MyLikeMovie
 from member.views import ConfirmEmailView, PasswordResetView, PasswordResetConfirmView
 from movie.apis.box_office import BoxOfficeAPIView, BoxOfficeAPIViewIOS
 from movie.apis.comment import NewCommentAPIView, BestComment
-from movie.apis.favorites import GenreView, MakingCountryView, GradeView, UserFavorites
+from movie.apis.favorites import GenreView, MakingCountryView, GradeView, UserFavorites, DeleteFavorite
 from movie.apis.magazine import SampleMagazineAPIView
 from movie.apis.movie_recommend import CarouselMovieRecommend, MainMovieList, FavoriteMovieRecommend, \
     FavoriteMovieRecommendIOS
@@ -55,6 +55,7 @@ urlpatterns = [
     url(r'^member/my-famous/', MyFamousLines.as_view(), name='my_famous'),
     url(r'^member/my-info/', MyInfo.as_view(), name='my_info'),
     url(r'^member/my-like-movie/', MyLikeMovie.as_view(), name='my_like_movie'),
+    url(r'^member/delete-favorite/', DeleteFavorite.as_view(), name='delete_favorite'),
     # 테스트페이지
     url(r'^test-api/', include('test_app.urls', namespace='test')),
     # 영화페이지

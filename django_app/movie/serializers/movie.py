@@ -129,6 +129,19 @@ class MovieSerializer(serializers.ModelSerializer):
             'star_average',
         )
 
+    def to_representation(self, instance):
+        ret = super().to_representation(instance)
+        ret['is_like'] = False
+        ret['is_comment'] = False
+        request = self.context.get('request')
+        if request is not None:
+            if request.user.is_authenticated:
+                if instance.like_users.filter(id=request.user.pk).exists():
+                    ret['is_like'] = True
+                if instance.comment_users.filter(id=request.user.pk).exists():
+                    ret['is_comment'] = True
+        return ret
+
 
 class MovieDetailSerializer(serializers.ModelSerializer):
     image_set = MovieImageSerializer(many=True, read_only=True, source='movieimages_set')
