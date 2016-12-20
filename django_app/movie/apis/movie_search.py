@@ -20,7 +20,6 @@ class MovieSearch(APIView):
         else:
             keyword = 0
 
-        keyword = request.GET.get('keyword')
         title = movie_search_func(keyword)
         # print('title', title)
 
