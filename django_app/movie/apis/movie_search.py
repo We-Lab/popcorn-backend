@@ -13,8 +13,14 @@ from movie.serializers.movie import MovieDetailSerializer, MovieSerializer, Movi
 
 class MovieSearch(APIView):
     def get(self, request):
+
+        # 공백 키워드 예외처리
+        if request.GET.get('keyword'):
+            keyword = request.GET.get('keyword')
+        else:
+            keyword = 0
+
         keyword = request.GET.get('keyword')
-        # print('keyword', keyword)
         title = movie_search_func(keyword)
         # print('title', title)
 
