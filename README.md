@@ -16,9 +16,3 @@ Web, iOS 클라이언트 대상으로 API를 제공합니다.
 1. AWS EB
 2. RDS Postgres
 3. S3 storage
-
-#### ERD(entity-relationship diagram)
-![Image of ERD](/assets/erd.png)
-
-#### ERD 요약
-![Image of ERD Summery](/assets/erd_summery.png)
