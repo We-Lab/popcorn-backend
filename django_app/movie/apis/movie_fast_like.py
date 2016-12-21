@@ -16,5 +16,5 @@ class MovieFastLike(generics.ListAPIView):
     pagination_class = LargeResultsSetPagination
 
     def get_queryset(self):
-        return Movie.objects.exclude(comment__author=self.request.user.pk).order_by('-create')
+        return Movie.objects.exclude(comment__author=self.request.user.pk).exclude(img_url='').order_by('-create')
 
