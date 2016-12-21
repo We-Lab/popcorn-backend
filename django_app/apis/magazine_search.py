@@ -11,7 +11,9 @@ def magazine_search():
     3. 매거진 아이디가 db에 존재하지 않은 매거진이면 저장을 시도합니다.
     4. 메거진의 본문이 20자가 안되면 저장하지 않습니다.
 
+    :return: None
     """
+
     actors = Actor.objects.all()
 
     for actor in actors:
