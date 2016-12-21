@@ -70,10 +70,8 @@ class FavoriteMovieRecommend(generics.ListAPIView):
             for movie in movies:
                 favorite_recommend_movies.append(movie)
         # print(len(set(favorite_recommend_movies)))
-        if len(set(favorite_recommend_movies)) == 0:
-            raise NotAcceptable('취향을 선택해주세요.')
-        elif len(set(favorite_recommend_movies)) < 12:
-            raise NotAcceptable('취향을 더 선택해주세요.')
+        if len(set(favorite_recommend_movies)) < 6:
+            return favorite_recommend_movies
         movie_recommend = random.sample(set(favorite_recommend_movies), 6)
         return movie_recommend
 
@@ -106,10 +104,8 @@ class FavoriteMovieRecommendIOS(generics.ListAPIView):
             for movie in movies:
                 favorite_recommend_movies.append(movie)
         # print(favorite_recommend_movies)
-        if len(set(favorite_recommend_movies)) == 0:
-            raise NotAcceptable('취향을 선택해주세요.')
-        elif len(set(favorite_recommend_movies)) < 40:
-            raise NotAcceptable('취향을 더 선택해주세요.')
+        if len(set(favorite_recommend_movies)) < 20:
+            return favorite_recommend_movies
         movie_recommend = random.sample(set(favorite_recommend_movies), 20)
         return movie_recommend
 
