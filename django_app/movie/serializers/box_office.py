@@ -5,6 +5,10 @@ from movie.serializers.movie import BoxOfficeDetailSerializer, BoxOfficeDetailSe
 
 
 class BoxOfficeSerializer(serializers.ModelSerializer):
+    """
+    박스오피스 직렬화
+    영화정보 nested
+    """
     movie = BoxOfficeDetailSerializer(read_only=True)
 
     class Meta:
@@ -19,6 +23,10 @@ class BoxOfficeSerializer(serializers.ModelSerializer):
 
 
 class BoxOfficeSerializerIOS(serializers.ModelSerializer):
+    """
+    박스오피스 직렬화 ios전용
+    영화정보 nested
+    """
     movie = BoxOfficeDetailSerializerIOS(read_only=True)
 
     class Meta:
@@ -31,6 +39,7 @@ class BoxOfficeSerializerIOS(serializers.ModelSerializer):
             'ticketing_rate',
         )
 
+    # 좋아요 여부, 댓글작성 여부 추가
     def to_representation(self, instance):
         ret = super().to_representation(instance)
         ret['is_like'] = False
@@ -43,4 +52,3 @@ class BoxOfficeSerializerIOS(serializers.ModelSerializer):
                 if instance.comment_users.filter(id=request.user.pk).exists():
                     ret['is_comment'] = True
         return ret
-
