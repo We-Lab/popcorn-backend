@@ -123,30 +123,52 @@ class RelatedMovieView(APIView):
         3. 영화좋아요: 10개이상 / 8 / 6 / 4 / 2 (가중치: *10)
     3. 10개 중 4개 랜덤 추출
     4. 현재영화 제목의 첫 단어로 검색하여 일치하는 영화 (시리즈물) 최종 리스트 앞단에 추가
-    5. 최종 list 4개 slice 해서 출력
+    5. 현재영화의 주연배우가 참여한 다른영화 리스트 앞단에 추가
+    6. 최종 list 4개 slice 해서 출력
 
     """
     def get(self, request, *args, **kwargs):
         benchmark_movie = Movie.objects.get(pk=self.kwargs['pk'])
-
+        movie_exclude_myself = Movie.objects.exclude(pk=self.kwargs['pk'])
         # 시리즈 확인
         benchmark_movie_title = benchmark_movie.title_kor
         hash_kor = benchmark_movie_title.split()[0]
-        series = Movie.objects.exclude(pk=self.kwargs['pk']).filter(title_kor__startswith=hash_kor)
+        series = movie_exclude_myself.filter(title_kor__startswith=hash_kor).exclude(img_url='')
         series = list(series)
+        # print('series', series)
 
+        # 주연 배우 확인
+        number_of_actor = 4
+        number_movie_per_actor = 4
+
+        benchmark_movie_actors = benchmark_movie.actors.all()[:number_of_actor]
+        related_actors_movie = []
+        # print(benchmark_movie_actors)
+
+        for actor in benchmark_movie_actors:
+            # print('actor', actor)
+            movies = movie_exclude_myself.filter(actors=actor).exclude(img_url='').order_by('-star_average')[:number_movie_per_actor]
+            for movie in movies:
+                # print('movie', movie)
+                if movie in series:
+                    pass
+                else:
+                    related_actors_movie.append(movie)
+        # print('related_actors_movie', related_actors_movie)
         # 1차 장르필터로 모수 추출
         benchmark_movie_genre = benchmark_movie.genre.all()
         base_movie_list = []
 
         for genre in benchmark_movie_genre:
-            movies = Movie.objects.exclude(pk=self.kwargs['pk']).filter(genre=genre).exclude(img_url='').order_by('-star_average')[:30]
+            movies = movie_exclude_myself.filter(genre=genre).exclude(img_url='').order_by('-star_average')[:30]
             for movie in movies:
                 if movie in series:
                     pass
                 else:
                     base_movie_list.append(movie)
+
         base_movie_list_set = set(base_movie_list)
+        # print('base_movie_list_set', base_movie_list_set)
         related_movie_list = []
 
         # 2차 가중치 필터로 상위 10개 추출
@@ -172,9 +194,15 @@ class RelatedMovieView(APIView):
         for movie_tup in related_random_four:
             final_list.append(movie_tup[0])
 
-        # 시리즈가 있으면 우선순위로 출력
+        # 주연의 다른 영화가 있으면 우선순위로 출력
+        if len(related_actors_movie) != 0:
+            final_list = related_actors_movie + final_list
+
+        # 시리즈가 있으면 최 우선순위로 출력
         if len(series) != 0:
             final_list = series + final_list
-            final_list = final_list[:4]
+
+        final_list = final_list[:4]
+        # print(final_list)
         serializer = RelatedMovieSerializer(final_list, many=True)
         return Response(serializer.data)
