@@ -140,7 +140,7 @@ class RelatedMovieView(APIView):
         base_movie_list = []
 
         for genre in benchmark_movie_genre:
-            movies = Movie.objects.exclude(pk=self.kwargs['pk']).filter(genre=genre).order_by('-star_average')[:30]
+            movies = Movie.objects.exclude(pk=self.kwargs['pk']).filter(genre=genre).exclude(img_url='').order_by('-star_average')[:30]
             for movie in movies:
                 if movie in series:
                     pass
