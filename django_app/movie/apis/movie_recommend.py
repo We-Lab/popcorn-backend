@@ -20,7 +20,7 @@ class CarouselMovieRecommend(APIView):
     """
     def get(self, request, *args, **kwargs):
         now = datetime.datetime.now()
-        movies = Movie.objects.filter(boxofficemovie__isnull=True, created_year=now.year).order_by('-star_average')[:10]
+        movies = Movie.objects.filter(boxofficemovie__isnull=True, created_year=now.year).exclude(img_url='').order_by('-star_average')[:10]
         movie_recommend = random.sample(set(movies), 3)
         serializer = MovieDetailSerializer(movie_recommend, many=True)
         return Response(serializer.data)
@@ -58,15 +58,15 @@ class FavoriteMovieRecommend(generics.ListAPIView):
         making_countrys = self.request.user.favorite_making_country.all()
         favorite_recommend_movies = []
         for genre in genres:
-            movies = Movie.objects.filter(genre=genre).order_by('-star_average')[:6]
+            movies = Movie.objects.filter(genre=genre).exclude(img_url='').order_by('-star_average')[:6]
             for movie in movies:
                 favorite_recommend_movies.append(movie)
         for grade in grades:
-            movies = Movie.objects.filter(grade=grade).order_by('-star_average')[:6]
+            movies = Movie.objects.filter(grade=grade).exclude(img_url='').order_by('-star_average')[:6]
             for movie in movies:
                 favorite_recommend_movies.append(movie)
         for making_country in making_countrys:
-            movies = Movie.objects.filter(making_country=making_country).order_by('-star_average')[:6]
+            movies = Movie.objects.filter(making_country=making_country).exclude(img_url='').order_by('-star_average')[:6]
             for movie in movies:
                 favorite_recommend_movies.append(movie)
         # print(len(set(favorite_recommend_movies)))
@@ -94,15 +94,15 @@ class FavoriteMovieRecommendIOS(generics.ListAPIView):
         making_countrys = self.request.user.favorite_making_country.all()
         favorite_recommend_movies = []
         for genre in genres:
-            movies = Movie.objects.filter(genre=genre).order_by('-star_average')[:20]
+            movies = Movie.objects.filter(genre=genre).exclude(img_url='').order_by('-star_average')[:20]
             for movie in movies:
                 favorite_recommend_movies.append(movie)
         for grade in grades:
-            movies = Movie.objects.filter(grade=grade).order_by('-star_average')[:20]
+            movies = Movie.objects.filter(grade=grade).exclude(img_url='').order_by('-star_average')[:20]
             for movie in movies:
                 favorite_recommend_movies.append(movie)
         for making_country in making_countrys:
-            movies = Movie.objects.filter(making_country=making_country).order_by('-star_average')[:20]
+            movies = Movie.objects.filter(making_country=making_country).exclude(img_url='').order_by('-star_average')[:20]
             for movie in movies:
                 favorite_recommend_movies.append(movie)
         # print(favorite_recommend_movies)
