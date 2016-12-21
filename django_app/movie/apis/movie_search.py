@@ -1,7 +1,7 @@
 from rest_framework import generics
 from rest_framework import permissions
 from rest_framework import status
-from rest_framework.exceptions import NotAcceptable
+from rest_framework.exceptions import NotFound
 from rest_framework.pagination import CursorPagination
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -84,7 +84,7 @@ class MovieDetailView(generics.RetrieveAPIView):
         result = Movie.objects.filter(pk=movie_pk)
         if result:
             return result
-        raise NotAcceptable('찾는 영화가 없습니다.')
+        raise NotFound('찾는 영화가 없습니다.')
 
 
 class MovieLikeView(generics.CreateAPIView):
