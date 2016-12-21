@@ -5,7 +5,7 @@ from django.db.models import Count
 from rest_framework import generics
 from rest_framework import permissions
 from rest_framework import status
-from rest_framework.exceptions import NotAcceptable
+from rest_framework.exceptions import NotAcceptable, NotFound
 from rest_framework.pagination import CursorPagination
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -99,7 +99,7 @@ class CommentLikeView(generics.CreateAPIView):
         try:
             comment = Comment.objects.get(pk=kwargs['pk'])
         except:
-            raise NotAcceptable('댓글이 존재하지 않습니다.')
+            raise NotFound('댓글이 존재하지 않습니다.')
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         comment_like_exist = CommentLike.objects.filter(user=request.user, comment=comment)
