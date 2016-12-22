@@ -9,6 +9,10 @@ class ActorInline(admin.TabularInline):
 
 
 class MovieAdmin(admin.ModelAdmin):
+    """
+    1. 영화 관리 어드민
+    2. 배우 정보 nested
+    """
     fieldsets = [
         ('영화 기본정보', {'fields': ['daum_id', 'title_kor', 'title_eng', 'director', 'created_year', 'genre', 'making_country', 'grade', 'run_time']}),
         ('영화 상세정보',
@@ -27,6 +31,9 @@ admin.site.register(Movie, MovieAdmin)
 
 
 class CommentAdmin(admin.ModelAdmin):
+    """
+    댓글 정보 어드민
+    """
     fields = [
         'author',
         'movie',
@@ -46,6 +53,9 @@ admin.site.register(Comment, CommentAdmin)
 
 
 class FamousLineAdmin(admin.ModelAdmin):
+    """
+    명대사 관리 어드민
+    """
     fields = [
         'author',
         'movie',
@@ -64,6 +74,9 @@ admin.site.register(FamousLine, FamousLineAdmin)
 
 
 class BoxOfficeAdmin(admin.ModelAdmin):
+    """
+    박스오피스 관리 어드민
+    """
     fields = [
         'rank',
         'movie',
@@ -77,6 +90,9 @@ admin.site.register(BoxOfficeMovie, BoxOfficeAdmin)
 
 
 class MagazineAdmin(admin.ModelAdmin):
+    """
+    매거진 관리 어드민
+    """
     fields = [
         'mag_id',
         'title',
