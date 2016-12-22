@@ -12,7 +12,12 @@ Web, iOS 클라이언트 대상으로 API를 제공합니다.
 1. python 3.4.3
 2. django 1.10.3
 
-#### 서버환경
-1. AWS EB
-2. RDS Postgres
-3. S3 storage
+#### 서버세팅
+1. Server: AWS elasticbeanstalk EC2
+2. DB: RDS Postgres
+3. Storage: S3
+4. DNS: AWS Route 53
+5. SSL: AWS Certificate Manager
+
+#### ERD (django extensions 서드파티 사용하여 출력, 참고용 자료)
+![ERD](./assets/erd.png)
