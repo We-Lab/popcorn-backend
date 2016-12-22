@@ -7,6 +7,10 @@ from member.models import MyUser
 
 
 class RegistrationSerializer(RegisterSerializer):
+    """
+    1. 회원가입 직렬화 커스텀
+    2. 입력 필드추가, regex 필터 설정
+    """
     username = serializers.RegexField(regex='^([a-zA-Z0-9]){4,10}$', required=True, help_text='영어/숫자 사용가능 4~10자')
     nickname = serializers.RegexField(regex='^([가-힣a-zA-Z0-9]){4,10}$', required=True, help_text='한글/영어/숫자 사용가능 4~10자')
     gender = serializers.CharField(required=True)
@@ -45,6 +49,9 @@ class RegistrationSerializer(RegisterSerializer):
 
 
 class UserSerializer(serializers.ModelSerializer):
+    """
+    회원정보 직렬화
+    """
     class Meta:
         model = MyUser
         fields = (
@@ -64,6 +71,9 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 class MyInfoSerializer(serializers.ModelSerializer):
+    """
+    회원 간략정보 직렬화
+    """
     class Meta:
         model = MyUser
         fields = (
