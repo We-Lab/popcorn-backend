@@ -4,6 +4,9 @@ from movie.models import Movie
 
 
 class RankSerializer(serializers.ModelSerializer):
+    """
+    영화 랭킹 직렬화
+    """
     star_average = serializers.ReadOnlyField()
 
     class Meta:
@@ -18,6 +21,7 @@ class RankSerializer(serializers.ModelSerializer):
             'like_users',
         )
 
+    # 영화 좋아요 작성여부, 영화댓글 작성여부 추가
     def to_representation(self, instance):
         ret = super().to_representation(instance)
         ret['is_like'] = False

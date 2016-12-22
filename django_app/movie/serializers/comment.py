@@ -5,9 +5,12 @@ from movie.models import Comment, CommentLike
 
 
 class CommentSerializer(serializers.ModelSerializer):
+    """
+    댓글 직렬화
+    배우정보 nested
+    """
     author = MyInfoSerializer(read_only=True)
 
-    # like_users 필드로 사용자의 좋아요 선택여부 판단 가능
     class Meta:
         model = Comment
         fields = (
@@ -23,6 +26,7 @@ class CommentSerializer(serializers.ModelSerializer):
         )
         read_only_fields = ('movie',)
 
+    # 유저의 좋아요 작성여부 추가
     def to_representation(self, instance):
         ret = super().to_representation(instance)
         ret['is_like'] = False
@@ -35,6 +39,9 @@ class CommentSerializer(serializers.ModelSerializer):
 
 
 class CommentLikeSerializer(serializers.ModelSerializer):
+    """
+    댓글 좋아요 직렬화
+    """
     user = serializers.StringRelatedField(read_only=True)
 
     class Meta:
@@ -43,7 +50,9 @@ class CommentLikeSerializer(serializers.ModelSerializer):
 
 
 class MyCommentStarSerializer(serializers.ModelSerializer):
-
+    """
+    나의 별점 직렬화
+    """
     class Meta:
         model = Comment
         fields = ('star', )
