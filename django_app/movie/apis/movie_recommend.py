@@ -30,13 +30,6 @@ class CarouselMovieRecommend(generics.ListAPIView):
         movie_recommend = random.sample(set(movies), 3)
         return movie_recommend
 
-    # def get(self, request, *args, **kwargs):
-    #     now = datetime.datetime.now()
-    #     movies = Movie.objects.filter(boxofficemovie__isnull=True, created_year=now.year).order_by('-star_average')[:10]
-    #     movie_recommend = random.sample(set(movies), 3)
-    #     serializer = MovieDetailSerializer(movie_recommend, many=True)
-    #     return Response(serializer.data)
-
 
 class FavoriteMovieRecommend(generics.ListAPIView):
     """
