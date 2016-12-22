@@ -52,7 +52,7 @@ class MovieSearch(APIView):
         # print(hash_kor, hash_kor1, hash_eng, hash_eng1)
 
         if len(title) == 0:
-            return Response([{"detail": "검색결과가 없습니다"}])
+            return Response([{}])
         elif Movie.objects.filter(title_kor__icontains=keyword).exists():
             movie = Movie.objects.filter(title_kor__icontains=keyword)
             serializer = MovieSerializer(movie, many=True)
