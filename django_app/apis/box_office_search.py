@@ -8,11 +8,11 @@ from movie.models import BoxOfficeMovie, Movie
 
 def box_office_search():
     """
-    1. 1일 1회 다음 박스오피스를 크롤링합니다.
-    2. 영화 크롤링으로 db에 영화 정보를 우선 저장합니다.
-    3. 영화상세정보 외 랭킹, 개봉일, 예매율은 box office 별도 table로 저장합니다.
-    4. box office table은 누적으로 저장합니다. (전일 변동 비교대조용)
+    1. 1일 1회 다음 박스오피스를 크롤링하여 db에 영화를 저장합니다.
+    2. 영화상세정보 외 랭킹, 개봉일, 예매율은 box office 별도 table로 저장합니다.
+    3. box office table은 누적으로 저장합니다. (전일 변동 비교대조용)
 
+    :return: None
     """
     response = requests.get('http://movie.daum.net/premovie/released')
     bs = BeautifulSoup(response.text, "html.parser")

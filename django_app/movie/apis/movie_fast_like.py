@@ -1,3 +1,7 @@
+""" 빠른 별점달기 view module
+1. 유저가 별점을 빠르게 추가하는 단축 페이지입니다.
+2. ios 전용입니다.
+"""
 from rest_framework import generics
 from rest_framework import permissions
 
@@ -8,8 +12,8 @@ from mysite.utils.custom_pagination import LargeResultsSetPagination
 
 class MovieFastLike(generics.ListAPIView):
     """
-    유저가 별점을 달지 않은 영화만 20개씩 출력합니다
-
+    1. 유저가 별점을 달지 않은 영화만 출력
+    2. 20개씩 pagination
     """
     serializer_class = MovieFastLikeSerializer
     permission_classes = (permissions.IsAuthenticated,)

@@ -1,3 +1,6 @@
+""" 영화/검색 view module
+
+"""
 from rest_framework import generics
 from rest_framework import permissions
 from rest_framework import status
@@ -12,6 +15,9 @@ from movie.serializers.movie import MovieDetailSerializer, MovieSerializer, Movi
 
 
 class MovieSearch(APIView):
+    """
+    영화 검색
+    """
     def get(self, request):
 
         # 공백 키워드 예외처리
@@ -66,6 +72,10 @@ class MovieSearch(APIView):
 
 
 class MovieListView(generics.ListAPIView):
+    """
+    1. 전체 영화 리스트
+    2. test 용
+    """
     serializer_class = MovieDetailSerializer
     permission_classes = (permissions.AllowAny,)
     pagination_class = CursorPagination
@@ -74,7 +84,7 @@ class MovieListView(generics.ListAPIView):
 
 class MovieDetailView(generics.RetrieveAPIView):
     """
-    영화 상세정보를 출력합니다.
+    영화 상세정보
     """
     serializer_class = MovieDetailSerializer
     permission_classes = (permissions.AllowAny,)
@@ -88,6 +98,9 @@ class MovieDetailView(generics.RetrieveAPIView):
 
 
 class MovieLikeView(generics.CreateAPIView):
+    """
+    영화 좋아요
+    """
     serializer_class = MovieLikeSerializer
     queryset = MovieLike.objects.all()
     permission_classes = (permissions.IsAuthenticated, )
