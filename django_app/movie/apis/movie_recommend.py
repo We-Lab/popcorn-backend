@@ -14,19 +14,28 @@ from movie.serializers.movie import MovieSerializer, MovieDetailSerializer, Rela
 from mysite.utils.custom_pagination import LargeResultsSetPagination
 
 
-class CarouselMovieRecommend(APIView):
+class CarouselMovieRecommend(generics.ListAPIView):
     """
     1. 메인페이지 케러셀 영역 영화추천
     2. 평점 최상위 10개중에 랜덤으로 2개 출력
     3. 올해 영화만 출력
     4. 박스오피스에 없는 영화만 출력
     """
-    def get(self, request, *args, **kwargs):
+    serializer_class = MovieDetailSerializer
+    paginator = None
+
+    def get_queryset(self):
         now = datetime.datetime.now()
-        movies = Movie.objects.filter(boxofficemovie__isnull=True, created_year=now.year).exclude(img_url='').order_by('-star_average')[:10]
+        movies = Movie.objects.filter(boxofficemovie__isnull=True, created_year=now.year).order_by('-star_average')[:10]
         movie_recommend = random.sample(set(movies), 3)
-        serializer = MovieDetailSerializer(movie_recommend, many=True)
-        return Response(serializer.data)
+        return movie_recommend
+
+    # def get(self, request, *args, **kwargs):
+    #     now = datetime.datetime.now()
+    #     movies = Movie.objects.filter(boxofficemovie__isnull=True, created_year=now.year).order_by('-star_average')[:10]
+    #     movie_recommend = random.sample(set(movies), 3)
+    #     serializer = MovieDetailSerializer(movie_recommend, many=True)
+    #     return Response(serializer.data)
 
 
 class FavoriteMovieRecommend(generics.ListAPIView):
