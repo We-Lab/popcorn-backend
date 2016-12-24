@@ -103,7 +103,10 @@ class CommentDetailView(generics.RetrieveUpdateDestroyAPIView):
         # 평점 계산
         movie.star_sum -= instance.star
         movie.comment_count -= 1
-        movie.star_average = ((movie.star_average * (movie.comment_count + 1)) - instance.star) / movie.comment_count
+        if movie.comment_count == 0:
+            movie.star_average = 0
+        else:
+            movie.star_average = ((movie.star_average * (movie.comment_count + 1)) - instance.star) / movie.comment_count
         movie.save()
 
         instance.delete()
