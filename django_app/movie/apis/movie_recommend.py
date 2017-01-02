@@ -27,7 +27,10 @@ class CarouselMovieRecommend(generics.ListAPIView):
     def get_queryset(self):
         now = datetime.datetime.now()
         movies = Movie.objects.filter(boxofficemovie__isnull=True, created_year=now.year).order_by('-star_average')[:10]
-        movie_recommend = random.sample(set(movies), 3)
+        if len(movies) < 3:
+            movie_recommend = movies
+        else:
+            movie_recommend = random.sample(set(movies), 3)
         return movie_recommend
 
 
